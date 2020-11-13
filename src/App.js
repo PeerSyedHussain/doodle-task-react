@@ -171,16 +171,22 @@ class App extends Component {
             product_img : '', 
             product_top : false,
             closeModal : false,
-            addTopProducts : []
+            addTopProducts : [],
+            pageNumber : [],
+            paginationResponse : {}
         }
     }
 
     componentDidMount(){
         this.addTopProducts()
         let response = this.paginator(this.state.products,1,9)
-        console.log(response)
-
-        this.loadPageNumber(response)
+        this.setState({
+            paginationResponse : response
+        },()=>{
+            // console.log('this.state.paginationResponse',this.state.paginationResponse)
+        })
+        this.loadPageNumber()
+        this.onLoadProductData()
     }
 
     categoryFilter(e){
@@ -366,6 +372,7 @@ class App extends Component {
             },() => {
                 console.log(this.state.products)
                 this.addTopProducts()
+                this.loadPageNumber(this.state.paginationResponse)
             })
         }
     }
@@ -415,15 +422,53 @@ class App extends Component {
         };
     }
 
-    loadPageNumber(response){
+    loadPageNumber(){
+
+        let dummy_array = []
+ 
+        let response = []
         
+        response = JSON.parse(JSON.stringify(this.state.paginationResponse))
+
+        console.log('test',response)
+
+        for(let i=1;i<=response.total_pages;i++){
+            dummy_array.push(i)
+        }
+        this.setState({
+            pageNumber : dummy_array
+        },()=>{
+            console.log('this.state.page',this.state.pageNumber)
+        })
+        
+        // $('.pagination li').click(function(e){                          //Onclick pagination function
+        //     e.preventDefault()
+        //     let new_response = paginator(products,$(this).data('page'),9)
+        //     $('.products ul').empty()
+        //     for(let i=0;i<new_response.data.length;i++){
+        //         let temp_products = "<li data-id='"+new_response.data[i].id+"' data-category='"+new_response.data[i].dataCategory+"' data-topProduct='"+new_response.data[i].dataTopProduct+"' data-sort='"+new_response.data[i].dataSort+"'class='"+new_response.data[i].className+"'><div class ='"+new_response.data[i].firstChildClass+"'><img src='"+new_response.data[i].img_url+"' alt='pic'/></div><div class='"+new_response.data[i].secChildClass+"'><p class='"+new_response.data[i].secChildChilFirClass+"' data-title='"+new_response.data[i].secChildChilFirData+"'>"+new_response.data[i].secChildChilFirData+"</p><p class='"+new_response.data[i].secChildChilSecClass+"' data-price='"+new_response.data[i].secChildChilSecData+"'>Rs "+new_response.data[i].secChildChilSecData+"</p></div></li>"
+        //         $('.products ul').append(temp_products)
+        //     }
+    
+        // })
+    }
+    onLoadProductData(){
+        let dummy_array = []
+
+        // for(let i=0;i<response.data.length;i++){
+        //     dummy_array.push(response.data[i])
+        // }
+
+        // this.setState({
+        //     products : dummy_array
+        // })
     }
 
     render() {
 
         const { categories,products,category_filter_products,sort_products,add_product_category_error,
                 add_product_title_error,add_product_price_error,add_product_image_error,product_title,product_price,
-                product_category,product_img,product_top,closeModal,addTopProducts } = this.state;
+                product_category,product_img,product_top,closeModal,addTopProducts,pageNumber } = this.state;
         // console.log(categories,products)
 
         return (
@@ -587,7 +632,19 @@ class App extends Component {
                             </ul>
                         </div>
                         <div className="pagination">
-                            <ul></ul>
+                            <ul>
+                                {
+                                    pageNumber.map((item,key) => {
+                                        return(
+                                            <>
+                                                <li className='page-num' id={key} data-page={item}>
+                                                    {item}
+                                                </li> 
+                                            </>  
+                                        )
+                                    })
+                                }
+                            </ul>
                         </div>
                     </div>
                 </section>
