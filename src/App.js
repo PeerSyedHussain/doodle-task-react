@@ -162,8 +162,16 @@ class App extends Component {
                 }
             ],
             category_filter_products : [],
-            sort_products : []
+            sort_products : [],
+            add_product_category_error : false,
+            add_product_title_error : false,
+            add_product_price_error : false,
+            add_product_image_error : false
         }
+    }
+
+    componentDidMount(){
+        console.log('hi')
     }
 
     categoryFilter(e){
@@ -174,7 +182,8 @@ class App extends Component {
         let dummy_array = []
 
         this.setState({
-            category_filter_products : this.state.products
+            category_filter_products : this.state.products,
+            sort_products : []
         },() => {
             // console.log(this.state.category_filter_products)
             if(filterable_type !== 'all'){
@@ -187,7 +196,7 @@ class App extends Component {
                         dummy_array.push(temp_obj)
                     }
                     this.setState({
-                        category_filter_products : dummy_array
+                        category_filter_products : dummy_array,
                     },() => {
                         console.log(this.state.category_filter_products)
                     })
@@ -241,7 +250,7 @@ class App extends Component {
         this.setState({
             sort_products : dummy_array
         },()=> {
-            console.log(this.state.sort_products)
+            console.log('this.state.sort_products',this.state.sort_products)
         })
     }
 
@@ -257,7 +266,7 @@ class App extends Component {
         this.setState({
             sort_products : dummy_array
         },()=> {
-            console.log(this.state.sort_products)
+            console.log('this.state.sort_products',this.state.sort_products)
         })
     }
 
@@ -270,9 +279,14 @@ class App extends Component {
         }
     }
 
+    addProduct = (e) => {
+        e.preventDefault()
+        console.log(e)
+    }
+
     render() {
 
-        const { categories,products,category_filter_products } = this.state;
+        const { categories,products,category_filter_products,sort_products,add_product_category_error,add_product_title_error,add_product_price_error,add_product_image_error } = this.state;
         // console.log(categories,products)
 
         return (
@@ -335,7 +349,42 @@ class App extends Component {
                                 <>
                                     {
                                         (category_filter_products.length === 0) ? 
-                                        products.map((item,key) => {
+                                            (sort_products.length === 0) ?
+                                                products.map((item,key) => {
+                                                    return(
+                                                        <>
+                                                            <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                                <div className={item.firstChildClass}>
+                                                                    <img src={item.img_url} alt="pic"/>
+                                                                </div>
+                                                                <div className={item.secChildClass}>
+                                                                    <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                    <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                                </div>
+                                                            </li>
+                                                        </>
+                                                    )
+                                                }) 
+                                                :
+                                                sort_products.map((item,key) => {
+                                                    return(
+                                                        <>
+                                                            <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                                <div className={item.firstChildClass}>
+                                                                    <img src={item.img_url} alt="pic"/>
+                                                                </div>
+                                                                <div className={item.secChildClass}>
+                                                                    <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                    <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                                </div>
+                                                            </li>
+                                                        </>
+                                                    )
+                                                }) 
+
+                                        :
+                                        (sort_products.length === 0) ? 
+                                        category_filter_products.map((item,key) => {
                                             return(
                                                 <>
                                                     <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
@@ -351,7 +400,7 @@ class App extends Component {
                                             )
                                         })
                                         :
-                                        category_filter_products.map((item,key) => {
+                                        sort_products.map((item,key) => {
                                             return(
                                                 <>
                                                     <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
@@ -396,12 +445,21 @@ class App extends Component {
                                             <option value="tshirt">Tshirts</option>
                                             <option value="misc">Misc</option>
                                         </select>
-                                        <span className="text-danger" id='productCategorySpan'>Select Product Category</span>
+                                        {
+                                            (add_product_category_error) ? 
+                                            <span className="text-danger" id='productCategorySpan'>Select Product Category</span> 
+                                            : ''
+                                        }
+                                       
                                     </div>
                                     <div className="my-3">
                                         <label htmlFor="productTitle">Product Title</label>
                                         <input type="text" className="form-control" id="productTitle" placeholder="Enter Product Title" />
-                                        <span className="text-danger" id='productTitleSpan'>Enter Product Title</span>
+                                        {
+                                            (add_product_title_error) ? 
+                                            <span className="text-danger" id='productTitleSpan'>Enter Product Title</span> 
+                                            : ''
+                                        }
                                     </div>
                                     <label htmlFor="productPrice">Product Price</label>
                                     <div className="input-group">
@@ -413,7 +471,11 @@ class App extends Component {
                                             <span className="input-group-text">.00</span>
                                         </div>
                                     </div>
-                                    <span className="text-danger" id='productPriceSpan'>Enter Product Price</span>
+                                    {
+                                        (add_product_price_error) ? 
+                                        <span className="text-danger" id='productPriceSpan'>Enter Product Price</span>
+                                        : ''
+                                    }
                                     <div className="form-check my-3">
                                         <input className="form-check-input" type="checkbox" value="" id="topProduct"/>
                                         <label className="form-check-label" htmlFor="topProduct">
@@ -424,11 +486,15 @@ class App extends Component {
                                         <label htmlFor="uploadImage">Upload Product Image</label>
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" id="uploadImage"/>
-                                            <span className="text-danger" id='productFileSpan'>Select Product Image</span>
+                                            {
+                                                (add_product_image_error) ? 
+                                                <span className="text-danger" id='productFileSpan'>Select Product Image</span>
+                                                :''
+                                            }
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <input type="submit" id='addProductSave' className="btn btn-primary" value="Save"/>
+                                    <input type="submit" id='addProductSave' onClick={this.addProduct} className="btn btn-primary" value="Save"/>
                                 </form>
                             </div>
                         </div>
