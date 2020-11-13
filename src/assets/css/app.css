@@ -38,6 +38,13 @@ ul li {
 .category-box ul li:last-child {
   border-bottom: none;
 }
+.category-box ul li:hover {
+  cursor: pointer;
+}
+.category-box ul li button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
 .sorting .dropdown-menu.show {
   left: -75px !important;

@@ -1,10 +1,280 @@
 import React, { Component } from 'react';
-import LeftSide from './components/LeftSide';
-import RightSide from './components/RightSide';
+import booksImg from './assets/img/books.jpg';
+import miscImg from './assets/img/misc.jpg';
+import tshirtImg from './assets/img/tshirt.jpg';
+import bagImg from './assets/img/bags.jpg';
+
 
 
 class App extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            categories : [
+                {
+                    id : 'all',
+                    categoryTitle : 'All'
+                },
+                {
+                    id : 'books',
+                    categoryTitle : 'Books'
+                },
+                {
+                    id : 'tshirt',
+                    categoryTitle : 'Tshirt'
+                },
+                {
+                    id : 'bags',
+                    categoryTitle : 'Bags'
+                },
+                {
+                    id : 'misc',
+                    categoryTitle : 'Misc'
+                },
+            ],
+            products : [
+                { 
+                    id : 1,
+                    dataCategory : "books",
+                    dataSort : 49,
+                    dataTopProduct : "on",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:booksImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Books",
+                    secChildChilSecData  : 49,
+                },
+                { 
+                    id : 2,
+                    dataCategory : "tshirt",
+                    dataSort : 79,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:tshirtImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Tshirts",
+                    secChildChilSecData  : 79,
+                },
+                { 
+                    id : 3,
+                    dataCategory : "tshirt",
+                    dataSort : 59,
+                    dataTopProduct : "on",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:tshirtImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Tshirts",
+                    secChildChilSecData  : 59,
+                },
+                { 
+                    id : 4,
+                    dataCategory : "bags",
+                    dataSort : 69,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:bagImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Bags",
+                    secChildChilSecData  : 69,
+                },
+                { 
+                    id : 5,
+                    dataCategory : "bags",
+                    dataSort : 39,
+                    dataTopProduct : "on",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:bagImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Bags",
+                    secChildChilSecData  : 39,
+                },
+                { 
+                    id : 6,
+                    dataCategory : "misc",
+                    dataSort : 29,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:miscImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Misc",
+                    secChildChilSecData  : 29,
+                },
+                { 
+                    id : 7,
+                    dataCategory : "misc",
+                    dataSort : 19,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:miscImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Misc",
+                    secChildChilSecData  : 19,
+                },
+                { 
+                    id : 8,
+                    dataCategory : "books",
+                    dataSort : 99,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:booksImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Books",
+                    secChildChilSecData  : 99,
+                },
+                { 
+                    id : 9,
+                    dataCategory : "books",
+                    dataSort : 990,
+                    dataTopProduct : "off",
+                    className : "shadow-sm",
+                    firstChildClass : "product-img",
+                    img_url:booksImg,
+                    secChildClass : "product-desc" ,
+                    secChildChilFirClass : "product-title",
+                    secChildChilSecClass : "product-price",
+                    secChildChilFirData  : "Books",
+                    secChildChilSecData  : 990,
+                }
+            ],
+            category_filter_products : [],
+            sort_products : []
+        }
+    }
+
+    categoryFilter(e){
+        // console.log(e.target.dataset.key)
+        e.preventDefault();
+        let filterable_type = e.target.dataset.key
+
+        let dummy_array = []
+
+        this.setState({
+            category_filter_products : this.state.products
+        },() => {
+            // console.log(this.state.category_filter_products)
+            if(filterable_type !== 'all'){
+                for(let i=0;i<this.state.category_filter_products.length;i++){
+                    // console.log(this.state.category_filter_products[i].dataCategory)
+                    let pro_attr_val = this.state.category_filter_products[i].dataCategory
+                    let temp_obj = {}
+                    if(filterable_type === pro_attr_val){
+                        temp_obj = this.state.category_filter_products[i]
+                        dummy_array.push(temp_obj)
+                    }
+                    this.setState({
+                        category_filter_products : dummy_array
+                    },() => {
+                        console.log(this.state.category_filter_products)
+                    })
+                }            
+            }
+            else{
+                console.log('1',this.state.category_filter_products)
+            }
+        })
+    }
+
+    sortLowToHigh = (e) => {
+        // console.log(e)
+ 
+        e.preventDefault();
+
+        let dummy_array = []
+
+        dummy_array = this.sortDummyArray(dummy_array)
+
+        dummy_array.sort(
+            function(a, b){
+                // console.log(a.dataSort - b.dataSort)
+                return  a.dataSort - b.dataSort
+            }
+        )
+        
+        this.setState({
+            sort_products : dummy_array
+        },()=> {
+            console.log('this.state.sort_products',this.state.sort_products)
+        })
+    }
+
+    sortHighToLow = (e) => {
+        // console.log(e)
+
+        e.preventDefault();
+
+        let dummy_array = []
+
+        dummy_array = this.sortDummyArray(dummy_array)
+
+        dummy_array.sort(
+            function(a, b){
+                // console.log(a.dataSort - b.dataSort)
+                return  b.dataSort - a.dataSort
+            }
+        )
+        // this.sortSetState
+        this.setState({
+            sort_products : dummy_array
+        },()=> {
+            console.log(this.state.sort_products)
+        })
+    }
+
+    sortDefault = (e) => {
+        // console.log(e)
+
+        e.preventDefault();
+
+        let dummy_array = []
+
+        dummy_array = this.sortDummyArray(dummy_array)
+    
+        this.setState({
+            sort_products : dummy_array
+        },()=> {
+            console.log(this.state.sort_products)
+        })
+    }
+
+    sortDummyArray(dummy_array){
+        if(this.state.category_filter_products.length === 0){
+            return dummy_array = JSON.parse(JSON.stringify(this.state.products))
+        }
+        else{
+           return dummy_array = this.state.category_filter_products
+        }
+    }
+
     render() {
+
+        const { categories,products,category_filter_products } = this.state;
+        // console.log(categories,products)
+
         return (
             <>
                 <section className='row my-4'>
@@ -23,7 +293,26 @@ class App extends Component {
                 </section>
                 <section className='row my-4'>
                     <div className='col-md-3'>
-                        <LeftSide/>
+                        <div>
+                            <p className="font-weight-bold">Browse by Categories</p>
+                            <div className="category-box">
+                                <ul>
+                                    {
+                                        categories.map((item,key) => {
+                                            return(
+                                                <>
+                                                    <li id={key} data-key={item.id} onClick={(e) => this.categoryFilter(e)}>
+                                                        <button type='button' className='btn text-left'>
+                                                            {item.categoryTitle}
+                                                        </button>
+                                                    </li>
+                                                </>
+                                            );
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                     <div className='col-md-9'>
                         <div className="d-flex align-items-center">
@@ -34,16 +323,59 @@ class App extends Component {
                                     Sorting
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="sortingBtn">
-                                    <button className="dropdown-item" type="button" id='PriceL_H'>Price Low to High</button>
-                                    <button className="dropdown-item" type="button" id='PriceH_L'>Price High to Low</button>
-                                    <button className="dropdown-item" type="button" id="Price_def">Default Sorting</button>
+                                    <button className="dropdown-item" type="button" id='PriceL_H' onClick={this.sortLowToHigh}>Price Low to High</button>
+                                    <button className="dropdown-item" type="button" id='PriceH_L' onClick={this.sortHighToLow}>Price High to Low</button>
+                                    <button className="dropdown-item" type="button" id="Price_def" onClick={this.sortDefault}>Default Sorting</button>
                                 </div>
                             </div>
                         </div>
 
-                        <RightSide/>
+                        <div className="products">
+                            <ul>
+                                <>
+                                    {
+                                        (category_filter_products.length === 0) ? 
+                                        products.map((item,key) => {
+                                            return(
+                                                <>
+                                                    <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                        <div className={item.firstChildClass}>
+                                                            <img src={item.img_url} alt="pic"/>
+                                                        </div>
+                                                        <div className={item.secChildClass}>
+                                                            <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                            <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                        </div>
+                                                    </li>
+                                                </>
+                                            )
+                                        })
+                                        :
+                                        category_filter_products.map((item,key) => {
+                                            return(
+                                                <>
+                                                    <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                        <div className={item.firstChildClass}>
+                                                            <img src={item.img_url} alt="pic"/>
+                                                        </div>
+                                                        <div className={item.secChildClass}>
+                                                            <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                            <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                        </div>
+                                                    </li>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                </>
+                            </ul>
+                        </div>
                     </div>
                 </section>
+
+
+
+
                 <div className='modal fade' id='addProduct' tabIndex='-1' role='dialog' aria-hidden='true' aria-labelledby='addProductTitle'>
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className='modal-content'>

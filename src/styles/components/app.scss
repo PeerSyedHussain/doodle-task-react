@@ -17,6 +17,7 @@
         margin:0;
     }
 }
+
 ul{
     li{
         list-style: none;
@@ -32,6 +33,15 @@ ul{
             border-bottom: 1px solid #ddd;
             &:last-child {
                 border-bottom: none;
+            }
+            &:hover{
+                cursor: pointer;
+            }
+            button{
+                &:focus{
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
             }
         }
     }
