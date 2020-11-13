@@ -4,8 +4,6 @@ import miscImg from './assets/img/misc.jpg';
 import tshirtImg from './assets/img/tshirt.jpg';
 import bagImg from './assets/img/bags.jpg';
 
-
-
 class App extends Component {
     constructor(props){
         super(props);
@@ -166,12 +164,23 @@ class App extends Component {
             add_product_category_error : false,
             add_product_title_error : false,
             add_product_price_error : false,
-            add_product_image_error : false
+            add_product_image_error : false,
+            product_title : '',
+            product_price : '',
+            product_category : '',
+            product_img : '', 
+            product_top : false,
+            closeModal : false,
+            addTopProducts : []
         }
     }
 
     componentDidMount(){
-        console.log('hi')
+        this.addTopProducts()
+        let response = this.paginator(this.state.products,1,9)
+        console.log(response)
+
+        this.loadPageNumber(response)
     }
 
     categoryFilter(e){
@@ -281,12 +290,140 @@ class App extends Component {
 
     addProduct = (e) => {
         e.preventDefault()
-        console.log(e)
+        console.log('addproduct',this.state.product_category,this.state.product_img,this.state.product_title,this.state.product_top,this.state.product_price)
+
+        if(this.state.product_title === '' || this.state.product_price === '' || this.state.product_category === '' || this.state.product_img === ''){
+            if(this.state.product_category !== ''){
+                this.setState({
+                    add_product_category_error : false 
+                })
+            }
+            else{
+                this.setState({
+                    add_product_category_error : true 
+                })
+            }
+            if(this.state.product_img !== ''){
+                this.setState({
+                    add_product_image_error : false 
+                })
+            }
+            else{
+                this.setState({
+                    add_product_image_error : true 
+                })
+            }
+            if(this.state.product_price !== ''){
+                this.setState({
+                    add_product_price_error : false
+                })
+            }
+            else{
+                this.setState({
+                    add_product_price_error : true
+                })
+            }
+            if(this.state.product_title !== ''){
+                this.setState({
+                    add_product_title_error : false
+                })
+            }
+            else{
+                this.setState({
+                    add_product_title_error : true
+                })
+            }
+        }
+        else{
+            let new_product = {
+                id : this.state.products.length + 1,
+                dataCategory : this.state.product_category,
+                dataSort : parseInt(this.state.product_price),
+                dataTopProduct : this.state.product_top,
+                className : "shadow-sm",
+                firstChildClass : "product-img",
+                img_url:this.state.product_img,
+                secChildClass : "product-desc" ,
+                secChildChilFirClass : "product-title",
+                secChildChilSecClass : "product-price",
+                secChildChilFirData  : this.state.product_title,
+                secChildChilSecData  : parseInt(this.state.product_price),
+            }
+            this.state.products.push(new_product)
+            this.setState({
+                products : this.state.products,
+                closeModal : true,
+                product_title : '',
+                product_price : '',
+                product_category : '',
+                product_img : '', 
+                product_top : false,
+                add_product_category_error : false,
+                add_product_title_error : false,
+                add_product_price_error : false,
+                add_product_image_error : false,
+
+            },() => {
+                console.log(this.state.products)
+                this.addTopProducts()
+            })
+        }
+    }
+
+    handleModal = (e) => {
+        this.setState({
+            closeModal : false
+        },
+        ()=> {
+            console.log(this.state.closeModal)
+        })
+    }
+
+    addTopProducts(){
+
+        let dummy_array = []
+        
+        for(let i=0;i<this.state.products.length;i++){
+            if(this.state.products[i].dataTopProduct === 'on' || this.state.products[i].dataTopProduct === true){
+                dummy_array.push(this.state.products[i])
+            }
+        }
+        this.setState({
+            addTopProducts : dummy_array
+        },()=>{
+            console.log(this.state.addTopProducts)
+        })
+    }
+
+    // Paginate calculation function
+    paginator(items, current_page, per_page_items) {
+        let page = current_page || 1,
+        per_page = per_page_items || 10,
+        offset = (page - 1) * per_page,
+
+        paginatedItems = items.slice(offset).slice(0, per_page_items),
+        total_pages = Math.ceil(items.length / per_page);
+
+        return {
+            page: page,
+            per_page: per_page,
+            pre_page: page - 1 ? page - 1 : null,
+            next_page: (total_pages > page) ? page + 1 : null,
+            total: items.length,
+            total_pages: total_pages,
+            data: paginatedItems
+        };
+    }
+
+    loadPageNumber(response){
+        
     }
 
     render() {
 
-        const { categories,products,category_filter_products,sort_products,add_product_category_error,add_product_title_error,add_product_price_error,add_product_image_error } = this.state;
+        const { categories,products,category_filter_products,sort_products,add_product_category_error,
+                add_product_title_error,add_product_price_error,add_product_image_error,product_title,product_price,
+                product_category,product_img,product_top,closeModal,addTopProducts } = this.state;
         // console.log(categories,products)
 
         return (
@@ -299,7 +436,7 @@ class App extends Component {
                             </h2>
                         </div>
                         <div>
-                            <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#addProduct">
+                            <button type="button" className="btn btn-primary" onClick={this.handleModal} data-toggle="modal" data-target="#addProduct">
                                 Add Product
                             </button>
                         </div>
@@ -322,6 +459,36 @@ class App extends Component {
                                                     </li>
                                                 </>
                                             );
+                                        })
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div className='my-4'>
+                            <p className="font-weight-bold">Our best sellers</p>
+
+                            <div className="top-product-list">
+                                <ul>
+                                    {
+                                        addTopProducts.map((item,key) => {
+                                            return(
+                                                <>
+                                                    <li id={key}>
+                                                        <div className="top-product-img">
+                                                            <img src={item.img_url} alt="pic"/>
+                                                        </div>
+                                                        <div className="top-product-desc mx-3">
+                                                            <p className="title m-0">
+                                                                {item.secChildChilFirData}
+                                                            </p>
+                                                            <p className="rating m-0"></p>
+                                                            <p className="rate m-0">
+                                                                Rs {item.secChildChilSecData}.00
+                                                            </p>
+                                                        </div>
+                                                    </li>
+                                                </>
+                                            )
                                         })
                                     }
                                 </ul>
@@ -419,9 +586,11 @@ class App extends Component {
                                 </>
                             </ul>
                         </div>
+                        <div className="pagination">
+                            <ul></ul>
+                        </div>
                     </div>
                 </section>
-
 
 
 
@@ -435,15 +604,23 @@ class App extends Component {
                                 </button>
                             </div>
                             <div className='modal-body'>
-                                <form id='addForm' action='/' encType='multipart/form-data'>
+                                <form id='addForm' action='/' encType='multipart/form-data' onSubmit={this.addProduct}>
                                     <div className='my-3'>
                                         <label htmlFor="category">Product Category</label>
-                                        <select className="custom-select" id="category">
+                                        <select className="custom-select" id="category"
+                                            value={product_category} onChange={(e) => {
+                                                this.setState({
+                                                    product_category : e.target.value,
+                                                },()=> {
+                                                    console.log(product_category)
+                                                })
+                                            }}
+                                        >
                                             <option value=''>Select Category</option>
                                             <option value="books">Books</option>
                                             <option value="bags">Bags</option>
                                             <option value="tshirt">Tshirts</option>
-                                            <option value="misc">Misc</option>
+                                            <option value="misc">Misc</option>  
                                         </select>
                                         {
                                             (add_product_category_error) ? 
@@ -454,7 +631,17 @@ class App extends Component {
                                     </div>
                                     <div className="my-3">
                                         <label htmlFor="productTitle">Product Title</label>
-                                        <input type="text" className="form-control" id="productTitle" placeholder="Enter Product Title" />
+                                        <input type="text" className="form-control" id="productTitle" 
+                                            placeholder="Enter Product Title" 
+                                            value={product_title} 
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    product_title : e.target.value,
+                                                },()=> {
+                                                    console.log(product_title)
+                                                })
+                                            }}
+                                        />
                                         {
                                             (add_product_title_error) ? 
                                             <span className="text-danger" id='productTitleSpan'>Enter Product Title</span> 
@@ -466,7 +653,17 @@ class App extends Component {
                                         <div className="input-group-prepend">
                                             <span className="input-group-text">Rs</span>
                                         </div>
-                                        <input type="number" className="form-control" id="productPrice"  placeholder="Enter Product Price"/>
+                                        <input type="number" className="form-control" id="productPrice"  
+                                            placeholder="Enter Product Price"
+                                            value={product_price}
+                                            onChange = {(e) => {
+                                                this.setState({
+                                                    product_price : e.target.value,
+                                                },()=>{
+                                                    console.log(product_price)
+                                                })
+                                            }}
+                                        />
                                         <div className="input-group-append">
                                             <span className="input-group-text">.00</span>
                                         </div>
@@ -477,7 +674,17 @@ class App extends Component {
                                         : ''
                                     }
                                     <div className="form-check my-3">
-                                        <input className="form-check-input" type="checkbox" value="" id="topProduct"/>
+                                        <input className="form-check-input" type="checkbox" value="" 
+                                            id="topProduct"
+                                            checked={product_top}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    product_top : e.target.checked,
+                                                },()=>{
+                                                    console.log(product_top)
+                                                })
+                                            }}
+                                        />
                                         <label className="form-check-label" htmlFor="topProduct">
                                         Top Product
                                         </label>
@@ -485,7 +692,15 @@ class App extends Component {
                                     <div className="my-3">
                                         <label htmlFor="uploadImage">Upload Product Image</label>
                                         <div className="custom-file">
-                                            <input type="file" className="custom-file-input" id="uploadImage"/>
+                                            <input type="file" className="custom-file-input" id="uploadImage" 
+                                                onChange={(e) => {
+                                                    this.setState({
+                                                        product_img : URL.createObjectURL(e.target.files[0]),
+                                                    },()=> {
+                                                        console.log(product_img)
+                                                    })
+                                                }}
+                                            />
                                             {
                                                 (add_product_image_error) ? 
                                                 <span className="text-danger" id='productFileSpan'>Select Product Image</span>
@@ -494,7 +709,7 @@ class App extends Component {
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <input type="submit" id='addProductSave' onClick={this.addProduct} className="btn btn-primary" value="Save"/>
+                                    <input type="submit" id='addProductSave' data-dismiss={closeModal ? 'modal' : ''} className="btn btn-primary" value='Save'/>
                                 </form>
                             </div>
                         </div>
