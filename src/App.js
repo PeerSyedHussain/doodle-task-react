@@ -174,7 +174,11 @@ class App extends Component {
             addTopProducts : [],
             pageNumber : [],
             paginationResponse : [],
-            pageWiseProducts : []
+            pageWiseProducts : [],
+            initialValue  : '',
+            finalValue : '',
+            midValue : '',
+            filtered_by_price : []
         }
     }
 
@@ -182,7 +186,39 @@ class App extends Component {
         this.addTopProducts()
         let response = this.paginator(this.state.products,1,9)
         this.setPageDatas(response)
+        this.getFilterByPrice()
     }
+
+    getFilterByPrice(){
+        
+        let final_array = []
+
+        final_array = this.sortDummyArray(final_array)
+
+        final_array.sort(
+            function(a, b){
+                // console.log(a.dataSort - b.dataSort)
+                return  a.dataSort - b.dataSort
+            }
+        )
+        let initialValueIndex = 0
+
+        let initialValue = final_array[initialValueIndex].dataSort
+
+        let finalValueIndex = final_array.length-1
+
+        let finalValue = final_array[finalValueIndex].dataSort
+        
+        let midValue = finalValue / 2
+        console.log('cjec',initialValue,finalValue,midValue)
+
+        this.setState({
+            initialValue : initialValue,
+            finalValue : finalValue,
+            midValue : midValue
+        })
+    }
+
     setPageDatas(response){
         this.setState({
             paginationResponse : response
@@ -388,13 +424,8 @@ class App extends Component {
                 console.log(this.state.products)
                 this.addTopProducts()
                 let response = this.paginator(this.state.products,1,9)
-                this.setState({
-                    paginationResponse : response
-                },()=>{
-                    console.log('this.state.paginationResponse',this.state.paginationResponse)
-                    this.loadPageNumber(this.state.paginationResponse)
-                    this.onLoadProductData(this.state.paginationResponse)
-                })
+                this.setPageDatas(response)
+                this.getFilterByPrice()
             })
         }
     }
@@ -495,11 +526,37 @@ class App extends Component {
             data: paginatedItems
         };
     }
+
+    filterByPrice = (e) => {
+        let min = parseInt(this.state.initialValue)
+        let max = parseInt(this.state.finalValue)
+
+        console.log(min,max)
+        let dummy_array =[]
+
+        for(let i=0;i<this.state.products.length;i++){
+            if((this.state.products[i].dataSort >= min) && (max >= this.state.products[i].dataSort)){
+                dummy_array.push(this.state.products[i])
+            }
+        }
+
+        console.log(dummy_array)
+
+        this.setState({
+            filtered_by_price : dummy_array
+        },()=>{
+            let response = this.paginator(this.state.filtered_by_price,1,9)
+            this.setPageDatas(response)
+        })
+
+    }
+
     render() {
 
-        const { categories,products,category_filter_products,sort_products,add_product_category_error,
-                add_product_title_error,add_product_price_error,add_product_image_error,product_title,product_price,
-                product_category,product_img,product_top,closeModal,addTopProducts,pageNumber,pageWiseProducts } = this.state;
+        const { categories,products,add_product_category_error,add_product_title_error,
+                add_product_price_error,add_product_image_error,product_title,product_price,
+                product_category,product_top,closeModal,addTopProducts,
+                pageNumber,pageWiseProducts,initialValue,midValue,finalValue } = this.state;
         // console.log(categories,products)
 
         return (
@@ -540,7 +597,30 @@ class App extends Component {
                                 </ul>
                             </div>
                         </div>
-                        <div className='my-4'>
+                        <div className="my-4">
+                            <p className="font-weight-bold">Filter by price</p>
+                            <div data-role="rangeslider" className="rangeslider">
+                                {/* <label htmlFor="range-1a">Rangeslider:</label> */}
+                                <input type="range" name="range-1a" id="range-1a" min={initialValue} 
+                                    max={midValue} value={initialValue} step="10" onChange={(e) => {
+                                        console.log(e.target.value)
+                                        this.setState({
+                                            initialValue : e.target.value
+                                        })
+                                    }} />
+                                {/* <label htmlFor="range-1b">Rangeslider:</label> */}
+                                <input type="range" name="range-1b" id="range-1b" min={midValue} 
+                                    max={finalValue} value={finalValue} step="10" onChange={(e) => {
+                                        console.log(e.target.value)
+                                        this.setState({
+                                            finalValue : e.target.value
+                                        })
+                                    }} />
+                            </div>
+                            <p>Price : Rs {initialValue}.00 - Rs {finalValue}.00</p>
+                            <button type='button' className='btn btn-secondary' onClick={this.filterByPrice} >Filter</button>
+                        </div>
+                        <div className=''>
                             <p className="font-weight-bold">Our best sellers</p>
 
                             <div className="top-product-list">
@@ -591,7 +671,7 @@ class App extends Component {
                             <ul>
                                 <>
                                     {
-                                        (pageWiseProducts.length !== 0) ? 
+                                        // (pageWiseProducts.length !== 0) ? 
                                             pageWiseProducts.map((item,key) => {
                                                 return(
                                                     <>
@@ -607,22 +687,22 @@ class App extends Component {
                                                     </>
                                                 )
                                             })
-                                        : 
-                                            products.map((item,key) => {
-                                                return(
-                                                    <>
-                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                                            <div className={item.firstChildClass}>
-                                                                <img src={item.img_url} alt="pic"/>
-                                                            </div>
-                                                            <div className={item.secChildClass}>
-                                                                <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                                <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                            </div>
-                                                        </li>
-                                                    </>
-                                                )
-                                            }) 
+                                        // : 
+                                            // products.map((item,key) => {
+                                            //     return(
+                                            //         <>
+                                            //             <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                            //                 <div className={item.firstChildClass}>
+                                            //                     <img src={item.img_url} alt="pic"/>
+                                            //                 </div>
+                                            //                 <div className={item.secChildClass}>
+                                            //                     <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                            //                     <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                            //                 </div>
+                                            //             </li>
+                                            //         </>
+                                            //     )
+                                            // }) 
                                         // (category_filter_products.length === 0) ? 
                                         //     (sort_products.length === 0) ?
                                         //         (pageWiseProducts.length !== 0) ? 
