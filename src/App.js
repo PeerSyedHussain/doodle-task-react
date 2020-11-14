@@ -173,7 +173,8 @@ class App extends Component {
             closeModal : false,
             addTopProducts : [],
             pageNumber : [],
-            paginationResponse : []
+            paginationResponse : [],
+            pageWiseProducts : []
         }
     }
 
@@ -213,12 +214,12 @@ class App extends Component {
                     this.setState({
                         category_filter_products : dummy_array,
                     },() => {
-                        console.log(this.state.category_filter_products)
+                        // console.log(this.state.category_filter_products)
                     })
                 }            
             }
             else{
-                console.log('1',this.state.category_filter_products)
+                // console.log('1',this.state.category_filter_products)
             }
         })
     }
@@ -242,7 +243,7 @@ class App extends Component {
         this.setState({
             sort_products : dummy_array
         },()=> {
-            console.log('this.state.sort_products',this.state.sort_products)
+            // console.log('this.state.sort_products',this.state.sort_products)
         })
     }
 
@@ -265,7 +266,7 @@ class App extends Component {
         this.setState({
             sort_products : dummy_array
         },()=> {
-            console.log('this.state.sort_products',this.state.sort_products)
+            // console.log('this.state.sort_products',this.state.sort_products)
         })
     }
 
@@ -281,7 +282,7 @@ class App extends Component {
         this.setState({
             sort_products : dummy_array
         },()=> {
-            console.log('this.state.sort_products',this.state.sort_products)
+            // console.log('this.state.sort_products',this.state.sort_products)
         })
     }
 
@@ -296,7 +297,7 @@ class App extends Component {
 
     addProduct = (e) => {
         e.preventDefault()
-        console.log('addproduct',this.state.product_category,this.state.product_img,this.state.product_title,this.state.product_top,this.state.product_price)
+        // console.log('addproduct',this.state.product_category,this.state.product_img,this.state.product_title,this.state.product_top,this.state.product_price)
 
         if(this.state.product_title === '' || this.state.product_price === '' || this.state.product_category === '' || this.state.product_img === ''){
             if(this.state.product_category !== ''){
@@ -376,6 +377,7 @@ class App extends Component {
                 this.setState({
                     paginationResponse : response
                 },()=>{
+                    console.log('this.state.paginationResponse',this.state.paginationResponse)
                     this.loadPageNumber(this.state.paginationResponse)
                     this.onLoadProductData(this.state.paginationResponse)
                 })
@@ -388,7 +390,7 @@ class App extends Component {
             closeModal : false
         },
         ()=> {
-            console.log(this.state.closeModal)
+            // console.log(this.state.closeModal)
         })
     }
 
@@ -404,7 +406,63 @@ class App extends Component {
         this.setState({
             addTopProducts : dummy_array
         },()=>{
-            console.log(this.state.addTopProducts)
+            // console.log(this.state.addTopProducts)
+        })
+    }
+
+    loadPageNumber(response){
+
+        let dummy_array = []
+ 
+        for(let i=1;i<=response.total_pages;i++){
+            dummy_array.push(i)
+        }
+        this.setState({
+            pageNumber : dummy_array
+        },()=>{
+            // console.log('this.state.page',this.state.pageNumber)
+        })
+        
+        // $('.pagination li').click(function(e){                          //Onclick pagination function
+        //     e.preventDefault()
+        //     let new_response = paginator(products,$(this).data('page'),9)
+        //     $('.products ul').empty()
+        //     for(let i=0;i<new_response.data.length;i++){
+        //         let temp_products = "<li data-id='"+new_response.data[i].id+"' data-category='"+new_response.data[i].dataCategory+"' data-topProduct='"+new_response.data[i].dataTopProduct+"' data-sort='"+new_response.data[i].dataSort+"'class='"+new_response.data[i].className+"'><div class ='"+new_response.data[i].firstChildClass+"'><img src='"+new_response.data[i].img_url+"' alt='pic'/></div><div class='"+new_response.data[i].secChildClass+"'><p class='"+new_response.data[i].secChildChilFirClass+"' data-title='"+new_response.data[i].secChildChilFirData+"'>"+new_response.data[i].secChildChilFirData+"</p><p class='"+new_response.data[i].secChildChilSecClass+"' data-price='"+new_response.data[i].secChildChilSecData+"'>Rs "+new_response.data[i].secChildChilSecData+"</p></div></li>"
+        //         $('.products ul').append(temp_products)
+        //     }
+    
+        // })
+    }
+    onLoadProductData(response){
+        let dummy_array = []
+
+        for(let i=0;i<response.data.length;i++){
+            dummy_array.push(response.data[i])
+        }
+
+        this.setState({
+            pageWiseProducts : dummy_array
+        },()=>{
+            console.log('onload data',this.state.pageWiseProducts)
+        })
+    }
+
+    pageNumbClick = (e) => {
+        e.preventDefault();
+        console.log(e.target.dataset.page)
+        let dummy_array = []
+
+        console.log(this.state.products)
+        let page_click_response = this.paginator(this.state.products,e.target.dataset.page,9)
+
+        console.log(page_click_response)
+        for(let i=0;i<page_click_response.data.length;i++){
+            dummy_array.push(page_click_response.data[i])
+        }
+
+        this.setState({
+            pageWiseProducts : dummy_array
         })
     }
 
@@ -427,50 +485,11 @@ class App extends Component {
             data: paginatedItems
         };
     }
-
-    loadPageNumber(response){
-
-        let dummy_array = []
- 
-        for(let i=1;i<=response.total_pages;i++){
-            dummy_array.push(i)
-        }
-        this.setState({
-            pageNumber : dummy_array
-        },()=>{
-            console.log('this.state.page',this.state.pageNumber)
-        })
-        
-        // $('.pagination li').click(function(e){                          //Onclick pagination function
-        //     e.preventDefault()
-        //     let new_response = paginator(products,$(this).data('page'),9)
-        //     $('.products ul').empty()
-        //     for(let i=0;i<new_response.data.length;i++){
-        //         let temp_products = "<li data-id='"+new_response.data[i].id+"' data-category='"+new_response.data[i].dataCategory+"' data-topProduct='"+new_response.data[i].dataTopProduct+"' data-sort='"+new_response.data[i].dataSort+"'class='"+new_response.data[i].className+"'><div class ='"+new_response.data[i].firstChildClass+"'><img src='"+new_response.data[i].img_url+"' alt='pic'/></div><div class='"+new_response.data[i].secChildClass+"'><p class='"+new_response.data[i].secChildChilFirClass+"' data-title='"+new_response.data[i].secChildChilFirData+"'>"+new_response.data[i].secChildChilFirData+"</p><p class='"+new_response.data[i].secChildChilSecClass+"' data-price='"+new_response.data[i].secChildChilSecData+"'>Rs "+new_response.data[i].secChildChilSecData+"</p></div></li>"
-        //         $('.products ul').append(temp_products)
-        //     }
-    
-        // })
-    }
-    onLoadProductData(response){
-        let dummy_array = []
-
-        for(let i=0;i<response.data.length;i++){
-            dummy_array.push(response.data[i])
-        }
-
-        this.setState({
-            products : dummy_array
-        },()=>{
-            console.log('onload data',this.state.products)
-        })
-    }
-
     render() {
 
         const { categories,products,category_filter_products,sort_products,add_product_category_error,
                 add_product_title_error,add_product_price_error,add_product_image_error,product_title,product_price,
-                product_category,product_img,product_top,closeModal,addTopProducts,pageNumber } = this.state;
+                product_category,product_img,product_top,closeModal,addTopProducts,pageNumber,pageWiseProducts } = this.state;
         // console.log(categories,products)
 
         return (
@@ -564,71 +583,88 @@ class App extends Component {
                                     {
                                         (category_filter_products.length === 0) ? 
                                             (sort_products.length === 0) ?
-                                                products.map((item,key) => {
-                                                    return(
-                                                        <>
-                                                            <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                                                <div className={item.firstChildClass}>
-                                                                    <img src={item.img_url} alt="pic"/>
-                                                                </div>
-                                                                <div className={item.secChildClass}>
-                                                                    <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                                    <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                                </div>
-                                                            </li>
-                                                        </>
-                                                    )
-                                                }) 
-                                                :
-                                                sort_products.map((item,key) => {
-                                                    return(
-                                                        <>
-                                                            <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                                                <div className={item.firstChildClass}>
-                                                                    <img src={item.img_url} alt="pic"/>
-                                                                </div>
-                                                                <div className={item.secChildClass}>
-                                                                    <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                                    <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                                </div>
-                                                            </li>
-                                                        </>
-                                                    )
-                                                }) 
+                                                (pageWiseProducts.length !== 0) ? 
+                                                    pageWiseProducts.map((item,key) => {
+                                                        return(
+                                                            <>
+                                                                <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                                    <div className={item.firstChildClass}>
+                                                                        <img src={item.img_url} alt="pic"/>
+                                                                    </div>
+                                                                    <div className={item.secChildClass}>
+                                                                        <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                        <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                                    </div>
+                                                                </li>
+                                                            </>
+                                                        )
+                                                    })
+                                                    :
+                                                    products.map((item,key) => {
+                                                        return(
+                                                            <>
+                                                                <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                                    <div className={item.firstChildClass}>
+                                                                        <img src={item.img_url} alt="pic"/>
+                                                                    </div>
+                                                                    <div className={item.secChildClass}>
+                                                                        <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                        <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                                    </div>
+                                                                </li>
+                                                            </>
+                                                        )
+                                                    }) 
+                                                    :
+                                                    sort_products.map((item,key) => {
+                                                        return(
+                                                            <>
+                                                                <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                                    <div className={item.firstChildClass}>
+                                                                        <img src={item.img_url} alt="pic"/>
+                                                                    </div>
+                                                                    <div className={item.secChildClass}>
+                                                                        <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                        <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                                    </div>
+                                                                </li>
+                                                            </>
+                                                        )
+                                                    }) 
 
-                                        :
-                                        (sort_products.length === 0) ? 
-                                        category_filter_products.map((item,key) => {
-                                            return(
-                                                <>
-                                                    <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                                        <div className={item.firstChildClass}>
-                                                            <img src={item.img_url} alt="pic"/>
-                                                        </div>
-                                                        <div className={item.secChildClass}>
-                                                            <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                            <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                        </div>
-                                                    </li>
-                                                </>
-                                            )
-                                        })
-                                        :
-                                        sort_products.map((item,key) => {
-                                            return(
-                                                <>
-                                                    <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                                        <div className={item.firstChildClass}>
-                                                            <img src={item.img_url} alt="pic"/>
-                                                        </div>
-                                                        <div className={item.secChildClass}>
-                                                            <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                            <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                        </div>
-                                                    </li>
-                                                </>
-                                            )
-                                        })
+                                            :
+                                            (sort_products.length === 0) ? 
+                                            category_filter_products.map((item,key) => {
+                                                return(
+                                                    <>
+                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                            <div className={item.firstChildClass}>
+                                                                <img src={item.img_url} alt="pic"/>
+                                                            </div>
+                                                            <div className={item.secChildClass}>
+                                                                <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                            </div>
+                                                        </li>
+                                                    </>
+                                                )
+                                            })
+                                            :
+                                            sort_products.map((item,key) => {
+                                                return(
+                                                    <>
+                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                            <div className={item.firstChildClass}>
+                                                                <img src={item.img_url} alt="pic"/>
+                                                            </div>
+                                                            <div className={item.secChildClass}>
+                                                                <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                                <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                            </div>
+                                                        </li>
+                                                    </>
+                                                )
+                                            })
                                     }
                                 </>
                             </ul>
@@ -639,7 +675,7 @@ class App extends Component {
                                     pageNumber.map((item,key) => {
                                         return(
                                             <>
-                                                <li className='page-num' id={key} data-page={item}>
+                                                <li className='page-num' id={key} data-page={item} onClick={this.pageNumbClick}>
                                                     {item}
                                                 </li> 
                                             </>  
@@ -671,7 +707,7 @@ class App extends Component {
                                                 this.setState({
                                                     product_category : e.target.value,
                                                 },()=> {
-                                                    console.log(product_category)
+                                                    // console.log(product_category)
                                                 })
                                             }}
                                         >
@@ -697,7 +733,7 @@ class App extends Component {
                                                 this.setState({
                                                     product_title : e.target.value,
                                                 },()=> {
-                                                    console.log(product_title)
+                                                    // console.log(product_title)
                                                 })
                                             }}
                                         />
@@ -719,7 +755,7 @@ class App extends Component {
                                                 this.setState({
                                                     product_price : e.target.value,
                                                 },()=>{
-                                                    console.log(product_price)
+                                                    // console.log(product_price)
                                                 })
                                             }}
                                         />
@@ -740,7 +776,7 @@ class App extends Component {
                                                 this.setState({
                                                     product_top : e.target.checked,
                                                 },()=>{
-                                                    console.log(product_top)
+                                                    // console.log(product_top)
                                                 })
                                             }}
                                         />
@@ -756,7 +792,7 @@ class App extends Component {
                                                     this.setState({
                                                         product_img : URL.createObjectURL(e.target.files[0]),
                                                     },()=> {
-                                                        console.log(product_img)
+                                                        // console.log(product_img)
                                                     })
                                                 }}
                                             />
