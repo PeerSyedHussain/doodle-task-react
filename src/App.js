@@ -165,6 +165,10 @@ class App extends Component {
             add_product_title_error : false,
             add_product_price_error : false,
             add_product_image_error : false,
+            edit_product_category_error : false,
+            edit_product_title_error : false,
+            edit_product_price_error : false,
+            edit_product_image_error : false,
             product_title : '',
             product_price : '',
             product_category : '',
@@ -178,7 +182,8 @@ class App extends Component {
             initialValue  : '',
             finalValue : '',
             midValue : '',
-            filtered_by_price : []
+            filtered_by_price : [],
+            editableItem : ''
         }
     }
 
@@ -563,12 +568,46 @@ class App extends Component {
         })
     }
 
+    editProduct(e,item){
+        e.preventDefault()
+
+        console.log(item)
+        // $(item).click(function(e){
+        //     console.log(this)
+
+        //     let data_id = $(this).data('id'); 
+
+        //     e.preventDefault();
+
+        //     $('#editProduct').modal();
+
+        //     fetchValue($(this))
+
+        //     let element = $(this)
+        //     $('#editForm').submit(function(event){
+        //         event.preventDefault();
+
+        //         if(data_id == element.data('id')){
+        //             updateValue(element)
+        //         }
+        //     })
+        // })
+    }
+    editModal(e,id){
+        let item = id
+        this.setState({
+            editableItem : item
+        })
+    }
+
+
     render() {
 
-        const { categories,products,add_product_category_error,add_product_title_error,
+        const { categories,add_product_category_error,add_product_title_error,
                 add_product_price_error,add_product_image_error,product_title,product_price,
                 product_category,product_top,closeModal,addTopProducts,
-                pageNumber,pageWiseProducts,initialValue,midValue,finalValue } = this.state;
+                pageNumber,pageWiseProducts,initialValue,midValue,finalValue,edit_product_category_error,
+                edit_product_image_error,edit_product_title_error,edit_product_price_error,editableItem } = this.state;
         // console.log(categories,products)
 
         return (
@@ -685,7 +724,10 @@ class App extends Component {
                                             pageWiseProducts.map((item,key) => {
                                                 return(
                                                     <>
-                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
+                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} 
+                                                            data-topproduct={item.dataTopProduct} data-sort={item.dataSort} 
+                                                            className={item.className} onClick={(e) => this.editModal(e,item.id)} 
+                                                            data-toggle='modal' data-target='#editProduct'>
                                                             <div className={item.firstChildClass}>
                                                                 <img src={item.img_url} alt="pic"/>
                                                             </div>
@@ -953,7 +995,7 @@ class App extends Component {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <form id='editForm' action="/" encType="multipart/form-data">
+                                <form id='editForm' action="/" encType="multipart/form-data" onSubmit={ (e) => this.editProduct(e,editableItem)} >
                                     <div className="my-3">
                                         <label htmlFor="category">Product Category</label>
                                         <select className="custom-select" id="editCategory">
@@ -963,12 +1005,20 @@ class App extends Component {
                                             <option value="tshirt">Tshirts</option>
                                             <option value="misc">Misc</option>
                                         </select>
-                                        <span className="text-danger" id='editproductCategorySpan'>Select Product Category</span>
+                                        {
+                                            (edit_product_category_error) ? 
+                                            <span className="text-danger" id='editproductCategorySpan'>Select Product Category</span>
+                                            : ''
+                                        }
                                     </div>
                                     <div className="my-3">
                                         <label htmlFor="productTitle">Product Title</label>
                                         <input type="text" className="form-control" id="editproductTitle" placeholder="Enter Product Title"/>
-                                        <span className="text-danger" id='editproductTitleSpan'>Enter Product Title</span>
+                                        {
+                                            (edit_product_title_error) ?
+                                            <span className="text-danger" id='editproductTitleSpan'>Enter Product Title</span>
+                                            : ''
+                                        }
                                     </div>
                                     <label htmlFor="productPrice">Product Price</label>
                                     <div className="input-group">
@@ -976,11 +1026,15 @@ class App extends Component {
                                         <span className="input-group-text">Rs</span>
                                         </div>
                                         <input type="text" className="form-control" id="editproductPrice" placeholder="Enter Product Price"/>
-                                        <span className="text-danger" id='editproductPriceSpan'>Enter Product Price</span>
                                         <div className="input-group-append">
                                         <span className="input-group-text">.00</span>
                                         </div>
                                     </div>
+                                    {
+                                        (edit_product_price_error) ? 
+                                        <span className="text-danger" id='editproductPriceSpan'>Enter Product Price</span>
+                                        : ''
+                                    }
                                     <div className="form-check my-3">
                                         <input className="form-check-input" type="checkbox" value="" id="edittopProduct"/>
                                         <label className="form-check-label" htmlFor="edittopProduct">
@@ -991,13 +1045,16 @@ class App extends Component {
                                         <label htmlFor="uploadImage">Upload Product Image</label>
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" id="edituploadImage" value=""/>
-                                            <span className="text-danger" id='editproductFileSpan'>Select Product Image</span>
+                                            {
+                                                (edit_product_image_error) ? 
+                                                <span className="text-danger" id='editproductFileSpan'>Select Product Image</span>                                            
+                                                : ''
+                                            }
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
                                     <input type="submit" id='editProductSave' className="btn btn-primary" value="Save"/>
                                 </form>
-                                
                             </div>
                         </div>
                     </div>
