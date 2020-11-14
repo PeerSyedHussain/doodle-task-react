@@ -173,7 +173,7 @@ class App extends Component {
             closeModal : false,
             addTopProducts : [],
             pageNumber : [],
-            paginationResponse : {}
+            paginationResponse : []
         }
     }
 
@@ -184,9 +184,9 @@ class App extends Component {
             paginationResponse : response
         },()=>{
             // console.log('this.state.paginationResponse',this.state.paginationResponse)
+            this.loadPageNumber(this.state.paginationResponse)
+            this.onLoadProductData(this.state.paginationResponse)
         })
-        this.loadPageNumber()
-        this.onLoadProductData()
     }
 
     categoryFilter(e){
@@ -372,7 +372,13 @@ class App extends Component {
             },() => {
                 console.log(this.state.products)
                 this.addTopProducts()
-                this.loadPageNumber(this.state.paginationResponse)
+                let response = this.paginator(this.state.products,1,9)
+                this.setState({
+                    paginationResponse : response
+                },()=>{
+                    this.loadPageNumber(this.state.paginationResponse)
+                    this.onLoadProductData(this.state.paginationResponse)
+                })
             })
         }
     }
@@ -422,16 +428,10 @@ class App extends Component {
         };
     }
 
-    loadPageNumber(){
+    loadPageNumber(response){
 
         let dummy_array = []
  
-        let response = []
-        
-        response = JSON.parse(JSON.stringify(this.state.paginationResponse))
-
-        console.log('test',response)
-
         for(let i=1;i<=response.total_pages;i++){
             dummy_array.push(i)
         }
@@ -452,16 +452,18 @@ class App extends Component {
     
         // })
     }
-    onLoadProductData(){
+    onLoadProductData(response){
         let dummy_array = []
 
-        // for(let i=0;i<response.data.length;i++){
-        //     dummy_array.push(response.data[i])
-        // }
+        for(let i=0;i<response.data.length;i++){
+            dummy_array.push(response.data[i])
+        }
 
-        // this.setState({
-        //     products : dummy_array
-        // })
+        this.setState({
+            products : dummy_array
+        },()=>{
+            console.log('onload data',this.state.products)
+        })
     }
 
     render() {
