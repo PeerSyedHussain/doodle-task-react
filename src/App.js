@@ -531,24 +531,36 @@ class App extends Component {
         let min = parseInt(this.state.initialValue)
         let max = parseInt(this.state.finalValue)
 
-        console.log(min,max)
+        // console.log(min,max)
         let dummy_array =[]
-
-        for(let i=0;i<this.state.products.length;i++){
-            if((this.state.products[i].dataSort >= min) && (max >= this.state.products[i].dataSort)){
-                dummy_array.push(this.state.products[i])
+        if(this.state.sort_products.length !== 0){
+            for(let i=0;i<this.state.sort_products.length;i++){
+                if((this.state.sort_products[i].dataSort >= min) && (max >= this.state.sort_products[i].dataSort)){
+                    dummy_array.push(this.state.sort_products[i])
+                }
             }
         }
-
-        console.log(dummy_array)
-
+        else if(this.state.category_filter_products.length !== 0){
+            for(let i=0;i<this.state.category_filter_products.length;i++){
+                if((this.state.category_filter_products[i].dataSort >= min) && (max >= this.state.category_filter_products[i].dataSort)){
+                    dummy_array.push(this.state.category_filter_products[i])
+                }
+            }
+        }
+        else{
+            for(let i=0;i<this.state.pageWiseProducts.length;i++){
+                if((this.state.pageWiseProducts[i].dataSort >= min) && (max >= this.state.pageWiseProducts[i].dataSort)){
+                    dummy_array.push(this.state.products[i])
+                }
+            }
+        }
+       // console.log(dummy_array)
         this.setState({
             filtered_by_price : dummy_array
         },()=>{
             let response = this.paginator(this.state.filtered_by_price,1,9)
             this.setPageDatas(response)
         })
-
     }
 
     render() {
@@ -600,7 +612,6 @@ class App extends Component {
                         <div className="my-4">
                             <p className="font-weight-bold">Filter by price</p>
                             <div data-role="rangeslider" className="rangeslider">
-                                {/* <label htmlFor="range-1a">Rangeslider:</label> */}
                                 <input type="range" name="range-1a" id="range-1a" min={initialValue} 
                                     max={midValue} value={initialValue} step="10" onChange={(e) => {
                                         console.log(e.target.value)
@@ -608,7 +619,6 @@ class App extends Component {
                                             initialValue : e.target.value
                                         })
                                     }} />
-                                {/* <label htmlFor="range-1b">Rangeslider:</label> */}
                                 <input type="range" name="range-1b" id="range-1b" min={midValue} 
                                     max={finalValue} value={finalValue} step="10" onChange={(e) => {
                                         console.log(e.target.value)
@@ -653,7 +663,7 @@ class App extends Component {
                     </div>
                     <div className='col-md-9'>
                         <div className="d-flex align-items-center">
-                                <p className="m-0">Showing 1-9 of {products.length} results</p>
+                                <p className="m-0">Showing {pageWiseProducts.length !== 0 ?`1 - ${pageWiseProducts.length}` : '0'} of {pageWiseProducts.length} results</p>
 
                             <div className="dropdown sorting mx-4">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
