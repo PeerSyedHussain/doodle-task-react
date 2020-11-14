@@ -422,17 +422,6 @@ class App extends Component {
         },()=>{
             // console.log('this.state.page',this.state.pageNumber)
         })
-        
-        // $('.pagination li').click(function(e){                          //Onclick pagination function
-        //     e.preventDefault()
-        //     let new_response = paginator(products,$(this).data('page'),9)
-        //     $('.products ul').empty()
-        //     for(let i=0;i<new_response.data.length;i++){
-        //         let temp_products = "<li data-id='"+new_response.data[i].id+"' data-category='"+new_response.data[i].dataCategory+"' data-topProduct='"+new_response.data[i].dataTopProduct+"' data-sort='"+new_response.data[i].dataSort+"'class='"+new_response.data[i].className+"'><div class ='"+new_response.data[i].firstChildClass+"'><img src='"+new_response.data[i].img_url+"' alt='pic'/></div><div class='"+new_response.data[i].secChildClass+"'><p class='"+new_response.data[i].secChildChilFirClass+"' data-title='"+new_response.data[i].secChildChilFirData+"'>"+new_response.data[i].secChildChilFirData+"</p><p class='"+new_response.data[i].secChildChilSecClass+"' data-price='"+new_response.data[i].secChildChilSecData+"'>Rs "+new_response.data[i].secChildChilSecData+"</p></div></li>"
-        //         $('.products ul').append(temp_products)
-        //     }
-    
-        // })
     }
     onLoadProductData(response){
         let dummy_array = []
@@ -563,7 +552,7 @@ class App extends Component {
                     </div>
                     <div className='col-md-9'>
                         <div className="d-flex align-items-center">
-                            <p className="m-0">Showing 1-9 of 10 results</p>
+                                <p className="m-0">Showing 1-9 of {products.length} results</p>
 
                             <div className="dropdown sorting mx-4">
                                 <button className="btn btn-secondary dropdown-toggle" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
