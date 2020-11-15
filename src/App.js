@@ -174,6 +174,11 @@ class App extends Component {
             product_category : '',
             product_img : '', 
             product_top : false,
+            edit_product_title : '',
+            edit_product_price : '',
+            edit_product_category : '',
+            edit_product_img : '', 
+            edit_product_top : false,
             closeModal : false,
             addTopProducts : [],
             pageNumber : [],
@@ -595,8 +600,31 @@ class App extends Component {
     }
     editModal(e,id){
         let item = id
+
+        let edit_category = ''
+        let edit_title = ''
+        let edit_price = ''
+        let edit_top_product = false
+        let edit_img = ''
+        for(let i=0;i<this.state.products.length;i++){
+            // console.log(this.state.products[i])
+            if(item === this.state.products[i].id){
+                console.log(this.state.products[i])
+                edit_category = this.state.products[i].dataCategory
+                edit_title = this.state.products[i].secChildChilFirData
+                edit_price = this.state.products[i].secChildChilSecData
+                edit_top_product = this.state.products[i].dataTopProduct
+                edit_img = this.state.products[i].img_url
+            }
+        }
+        console.log(edit_img,edit_category,edit_price,edit_title,edit_top_product)
         this.setState({
-            editableItem : item
+            editableItem : item,
+            edit_product_category : edit_category,
+            edit_product_img : edit_img,
+            edit_product_price : edit_price,
+            edit_product_title : edit_title,
+            edit_product_top : edit_top_product 
         })
     }
 
@@ -607,7 +635,8 @@ class App extends Component {
                 add_product_price_error,add_product_image_error,product_title,product_price,
                 product_category,product_top,closeModal,addTopProducts,
                 pageNumber,pageWiseProducts,initialValue,midValue,finalValue,edit_product_category_error,
-                edit_product_image_error,edit_product_title_error,edit_product_price_error,editableItem } = this.state;
+                edit_product_image_error,edit_product_title_error,edit_product_price_error,editableItem,edit_product_category,
+                edit_product_price,edit_product_title,edit_product_top } = this.state;
         // console.log(categories,products)
 
         return (
@@ -998,7 +1027,14 @@ class App extends Component {
                                 <form id='editForm' action="/" encType="multipart/form-data" onSubmit={ (e) => this.editProduct(e,editableItem)} >
                                     <div className="my-3">
                                         <label htmlFor="category">Product Category</label>
-                                        <select className="custom-select" id="editCategory">
+                                        <select className="custom-select" id="editCategory"
+                                            value={edit_product_category} onChange={(e) => {
+                                                console.log(e.target.value)   
+                                                this.setState({
+                                                    edit_product_category : e.target.value   
+                                                })
+                                            }}
+                                        >
                                             <option value=''>Select Category</option>
                                             <option value="books">Books</option>
                                             <option value="bags">Bags</option>
@@ -1013,7 +1049,15 @@ class App extends Component {
                                     </div>
                                     <div className="my-3">
                                         <label htmlFor="productTitle">Product Title</label>
-                                        <input type="text" className="form-control" id="editproductTitle" placeholder="Enter Product Title"/>
+                                        <input type="text" className="form-control" id="editproductTitle" 
+                                            placeholder="Enter Product Title" value={edit_product_title}
+                                            onChange={(e)=>{
+                                                console.log(e.target.value)
+                                                this.setState({
+                                                    edit_product_title : e.target.value
+                                                })
+                                            }}    
+                                        />
                                         {
                                             (edit_product_title_error) ?
                                             <span className="text-danger" id='editproductTitleSpan'>Enter Product Title</span>
@@ -1025,7 +1069,15 @@ class App extends Component {
                                         <div className="input-group-prepend">
                                         <span className="input-group-text">Rs</span>
                                         </div>
-                                        <input type="text" className="form-control" id="editproductPrice" placeholder="Enter Product Price"/>
+                                        <input type="text" className="form-control" id="editproductPrice" 
+                                            placeholder="Enter Product Price" value={edit_product_price}
+                                            onChange={(e)=>{
+                                                console.log(e.target.value)
+                                                this.setState({
+                                                    edit_product_price : e.target.value
+                                                })
+                                            }}
+                                        />
                                         <div className="input-group-append">
                                         <span className="input-group-text">.00</span>
                                         </div>
@@ -1036,7 +1088,13 @@ class App extends Component {
                                         : ''
                                     }
                                     <div className="form-check my-3">
-                                        <input className="form-check-input" type="checkbox" value="" id="edittopProduct"/>
+                                        <input className="form-check-input" type="checkbox" checked={edit_product_top === 'on' ? true : false} 
+                                        id="edittopProduct" onChange={(e) => {
+                                            console.log(e.target.checked)
+                                            this.setState({
+                                                edit_product_top : e.target.checked
+                                            })
+                                        }}/>
                                         <label className="form-check-label" htmlFor="edittopProduct">
                                         Top Product
                                         </label>
@@ -1044,7 +1102,14 @@ class App extends Component {
                                     <div className="my-3">
                                         <label htmlFor="uploadImage">Upload Product Image</label>
                                         <div className="custom-file">
-                                            <input type="file" className="custom-file-input" id="edituploadImage" value=""/>
+                                            <input type="file" className="custom-file-input" id="edituploadImage" 
+                                                onChange={(e) => {
+                                                    console.log(URL.createObjectURL(e.target.files[0]))
+                                                    this.setState({
+                                                        edit_product_img : URL.createObjectURL(e.target.files[0])
+                                                    })
+                                                }}
+                                            />
                                             {
                                                 (edit_product_image_error) ? 
                                                 <span className="text-danger" id='editproductFileSpan'>Select Product Image</span>                                            
