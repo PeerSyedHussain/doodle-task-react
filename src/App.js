@@ -168,7 +168,6 @@ class App extends Component {
             edit_product_category_error : false,
             edit_product_title_error : false,
             edit_product_price_error : false,
-            edit_product_image_error : false,
             product_title : '',
             product_price : '',
             product_category : '',
@@ -584,56 +583,96 @@ class App extends Component {
         let edit_top_product = false
         let edit_img = ''
 
-        edit_category = this.state.edit_product_category
-        edit_title = this.state.edit_product_title
-        edit_price = this.state.edit_product_price
-        edit_top_product = this.state.edit_product_top
-        edit_img = this.state.edit_product_img
-
-        // let index = item - 1
-
-        // this.setState((prevState) => {
-        //     let products = Object.assign({},prevState.products[index])
-        //     // console.log(products)
-        //     products.dataCategory = edit_category
-        //     products.secChildChilFirData = edit_title
-        //     products.secChildChilSecData = parseInt(edit_price)
-        //     products.dataSort = parseInt(edit_price)
-        //     products.dataTopProduct = (edit_top_product === false ? 'off' : 'on')
-        //     products.img_url = edit_img
-        //     return { products }
-        // },()=>{
-        //     this.setState({
-        //         closeModal : true
-        //     })
-        //     console.log(this.state.products)
-        // })
-        // this.setState(prevState => {
-        //     let jasper = Object.assign({}, prevState.jasper);  // creating copy of state variable jasper
-        //     jasper.name = 'someothername';                     // update the name property, assign a new value                 
-        //     return { jasper };                                 // return new object jasper object
-        //   })
-
-        this.setState(prevState => ({
-
-            products: prevState.products.map(
-                el => el.id === item ? { 
-                    ...el,
-                    dataCategory : edit_category,
-                    secChildChilFirData : edit_title,
-                    secChildChilSecData : parseInt(edit_price),
-                    dataSort : parseInt(edit_price),
-                    dataTopProduct : (edit_top_product === false ? 'off' : 'on'),
-                    img_url : edit_img
-                }
-                : el
-            )
-        }),()=> {
-            this.setState({
-                closeModal : true
+        if(this.state.edit_product_category === '' || this.state.edit_product_price === '' || this.state.edit_product_title === ''){
+            if(this.state.edit_product_category !== ''){
+                this.setState({
+                    edit_product_category_error : false 
+                })
+            }
+            else{
+                this.setState({
+                    edit_product_category_error : true 
+                })
+            }
+            if(this.state.edit_product_price !== ''){
+                this.setState({
+                    edit_product_price_error : false
+                })
+            }
+            else{
+                this.setState({
+                    edit_product_price_error : true
+                })
+            }
+            if(this.state.edit_product_title !== ''){
+                this.setState({
+                    edit_product_title_error : false
+                })
+            }
+            else{
+                this.setState({
+                    edit_product_title_error : true
+                })
+            }
+        }
+        else{
+            edit_category = this.state.edit_product_category
+            edit_title = this.state.edit_product_title
+            edit_price = this.state.edit_product_price
+            edit_top_product = this.state.edit_product_top
+            edit_img = this.state.edit_product_img
+    
+            // let index = item - 1
+    
+            // let dummy_array = JSON.parse(JSON.stringify(this.state.products))
+    
+            // for(let i=0;i<dummy_array.length;i++){
+            //     if(item === dummy_array[i].id){
+            //         dummy_array[i].dataCategory = edit_category
+            //         dummy_array[i].secChildChilFirData = edit_title
+            //         dummy_array[i].secChildChilSecData = parseInt(edit_price)
+            //         dummy_array[i].dataSort = parseInt(edit_price)
+            //         dummy_array[i].dataTopProduct = (edit_top_product === false ? 'off' : 'on')
+            //         dummy_array[i].img_url = edit_img
+            //     }
+            // }
+    
+            // this.setState({
+            //     products : dummy_array,
+            //     // pageWiseProducts : dummy_array
+            // },()=> {
+            //     this.setState({
+            //         closeModal : true
+            //     },() => {
+            //         this.addTopProducts()
+            //         console.log(this.state.products)
+            //     })
+            // })
+    
+            this.setState(prevState => ({
+    
+                products: prevState.products.map(
+                    el => el.id === item ? { 
+                        ...el,
+                        dataCategory : edit_category,
+                        secChildChilFirData : edit_title,
+                        secChildChilSecData : parseInt(edit_price),
+                        dataSort : parseInt(edit_price),
+                        dataTopProduct : (edit_top_product === false ? 'off' : 'on'),
+                        img_url : edit_img
+                    }
+                    : el
+                )
+            }),()=> {
+                this.setState({
+                    closeModal : true,
+                    pageWiseProducts : this.state.products
+                },() => {
+                    this.addTopProducts()
+                    console.log(this.state.products)
+                })
             })
-            console.log(this.state.products)
-        })
+        } 
     }
     editModal(e,id){
         let item = id
@@ -661,7 +700,8 @@ class App extends Component {
             edit_product_img : edit_img,
             edit_product_price : edit_price,
             edit_product_title : edit_title,
-            edit_product_top : edit_top_product 
+            edit_product_top : edit_top_product,
+            closeModal : false
         })
     }
 
@@ -672,7 +712,7 @@ class App extends Component {
                 add_product_price_error,add_product_image_error,product_title,product_price,
                 product_category,product_top,closeModal,addTopProducts,
                 pageNumber,pageWiseProducts,initialValue,midValue,finalValue,edit_product_category_error,
-                edit_product_image_error,edit_product_title_error,edit_product_price_error,editableItem,edit_product_category,
+                edit_product_title_error,edit_product_price_error,editableItem,edit_product_category,
                 edit_product_price,edit_product_title,edit_product_top } = this.state;
         // console.log(categories,products)
 
@@ -786,125 +826,24 @@ class App extends Component {
                             <ul>
                                 <>
                                     {
-                                        // (pageWiseProducts.length !== 0) ? 
-                                            pageWiseProducts.map((item,key) => {
-                                                return(
-                                                    <>
-                                                        <li id={key} data-id={item.id} data-category={item.dataCategory} 
-                                                            data-topproduct={item.dataTopProduct} data-sort={item.dataSort} 
-                                                            className={item.className} onClick={(e) => this.editModal(e,item.id)} 
-                                                            data-toggle='modal' data-target='#editProduct'>
-                                                            <div className={item.firstChildClass}>
-                                                                <img src={item.img_url} alt="pic"/>
-                                                            </div>
-                                                            <div className={item.secChildClass}>
-                                                                <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                                                <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                                            </div>
-                                                        </li>
-                                                    </>
-                                                )
-                                            })
-                                        // : 
-                                            // products.map((item,key) => {
-                                            //     return(
-                                            //         <>
-                                            //             <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                            //                 <div className={item.firstChildClass}>
-                                            //                     <img src={item.img_url} alt="pic"/>
-                                            //                 </div>
-                                            //                 <div className={item.secChildClass}>
-                                            //                     <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                            //                     <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                            //                 </div>
-                                            //             </li>
-                                            //         </>
-                                            //     )
-                                            // }) 
-                                        // (category_filter_products.length === 0) ? 
-                                        //     (sort_products.length === 0) ?
-                                        //         (pageWiseProducts.length !== 0) ? 
-                                        //             pageWiseProducts.map((item,key) => {
-                                        //                 return(
-                                        //                     <>
-                                        //                         <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                        //                             <div className={item.firstChildClass}>
-                                        //                                 <img src={item.img_url} alt="pic"/>
-                                        //                             </div>
-                                        //                             <div className={item.secChildClass}>
-                                        //                                 <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                        //                                 <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                        //                             </div>
-                                        //                         </li>
-                                        //                     </>
-                                        //                 )
-                                        //             })
-                                        //             :
-                                        //             products.map((item,key) => {
-                                        //                 return(
-                                        //                     <>
-                                        //                         <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                        //                             <div className={item.firstChildClass}>
-                                        //                                 <img src={item.img_url} alt="pic"/>
-                                        //                             </div>
-                                        //                             <div className={item.secChildClass}>
-                                        //                                 <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                        //                                 <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                        //                             </div>
-                                        //                         </li>
-                                        //                     </>
-                                        //                 )
-                                        //             }) 
-                                        //             :
-                                        //             sort_products.map((item,key) => {
-                                        //                 return(
-                                        //                     <>
-                                        //                         <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                        //                             <div className={item.firstChildClass}>
-                                        //                                 <img src={item.img_url} alt="pic"/>
-                                        //                             </div>
-                                        //                             <div className={item.secChildClass}>
-                                        //                                 <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                        //                                 <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                        //                             </div>
-                                        //                         </li>
-                                        //                     </>
-                                        //                 )
-                                        //             }) 
-
-                                        //     :
-                                        //     (sort_products.length === 0) ? 
-                                        //     category_filter_products.map((item,key) => {
-                                        //         return(
-                                        //             <>
-                                        //                 <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                        //                     <div className={item.firstChildClass}>
-                                        //                         <img src={item.img_url} alt="pic"/>
-                                        //                     </div>
-                                        //                     <div className={item.secChildClass}>
-                                        //                         <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                        //                         <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                        //                     </div>
-                                        //                 </li>
-                                        //             </>
-                                        //         )
-                                        //     })
-                                        //     :
-                                        //     sort_products.map((item,key) => {
-                                        //         return(
-                                        //             <>
-                                        //                 <li id={key} data-id={item.id} data-category={item.dataCategory} data-topproduct={item.dataTopProduct} data-sort={item.dataSort} className={item.className}>
-                                        //                     <div className={item.firstChildClass}>
-                                        //                         <img src={item.img_url} alt="pic"/>
-                                        //                     </div>
-                                        //                     <div className={item.secChildClass}>
-                                        //                         <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
-                                        //                         <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
-                                        //                     </div>
-                                        //                 </li>
-                                        //             </>
-                                        //         )
-                                        //     })
+                                        pageWiseProducts.map((item,key) => {
+                                            return(
+                                                <>
+                                                    <li id={key} data-id={item.id} data-category={item.dataCategory} 
+                                                        data-topproduct={item.dataTopProduct} data-sort={item.dataSort} 
+                                                        className={item.className} onClick={(e) => this.editModal(e,item.id)} 
+                                                        data-toggle='modal' data-target='#editProduct'>
+                                                        <div className={item.firstChildClass}>
+                                                            <img src={item.img_url} alt="pic"/>
+                                                        </div>
+                                                        <div className={item.secChildClass}>
+                                                            <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
+                                                            <p className={item.secChildChilSecClass} data-price={item.secChildChilSecData}>Rs {item.secChildChilSecData}</p>
+                                                        </div>
+                                                    </li>
+                                                </>
+                                            )
+                                        })                                       
                                     }
                                 </>
                             </ul>
@@ -1106,7 +1045,7 @@ class App extends Component {
                                         <div className="input-group-prepend">
                                         <span className="input-group-text">Rs</span>
                                         </div>
-                                        <input type="text" className="form-control" id="editproductPrice" 
+                                        <input type="number" className="form-control" id="editproductPrice" 
                                             placeholder="Enter Product Price" value={edit_product_price}
                                             onChange={(e)=>{
                                                 console.log(e.target.value)
@@ -1125,13 +1064,12 @@ class App extends Component {
                                         : ''
                                     }
                                     <div className="form-check my-3">
-                                        <input className="form-check-input" type="checkbox" checked={edit_product_top === 'on' ? true : false} 
-                                        id="edittopProduct" onChange={(e) => {
+                                        <input className="form-check-input" type="checkbox" id="edittopProduct" onChange={(e) => {
                                             console.log(e.target.checked)
                                             this.setState({
                                                 edit_product_top : e.target.checked
                                             })
-                                        }}/>
+                                        }} checked={edit_product_top === 'on' ? true : false}/>
                                         <label className="form-check-label" htmlFor="edittopProduct">
                                         Top Product
                                         </label>
@@ -1147,11 +1085,6 @@ class App extends Component {
                                                     })
                                                 }}
                                             />
-                                            {
-                                                (edit_product_image_error) ? 
-                                                <span className="text-danger" id='editproductFileSpan'>Select Product Image</span>                                            
-                                                : ''
-                                            }
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
