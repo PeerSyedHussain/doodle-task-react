@@ -127,11 +127,8 @@ ul li {
 .pagination ul > li[data-page]:hover {
   cursor: pointer;
 }
-.pagination ul > li.separator:before {
-  content: "...";
-}
 .pagination ul > li.active {
-  background-color: darkblue;
+  background-color: #a0a0a0;
   color: #fff;
 }
 

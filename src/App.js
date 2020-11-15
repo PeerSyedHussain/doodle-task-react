@@ -189,6 +189,7 @@ class App extends Component {
             filtered_by_price : [],
             editableItem : '',
             category_active_link : 0,
+            page_active_link : 1
         }
     }
 
@@ -528,6 +529,9 @@ class App extends Component {
 
         this.setState({
             pageWiseProducts : dummy_array,
+            page_active_link : parseInt(e.target.dataset.page)
+        },()=> {
+            console.log(this.state.page_active_link)
         })
     }
 
@@ -659,6 +663,11 @@ class App extends Component {
                     pageWiseProducts : this.state.products,
                 },() => {
                     this.addTopProducts()
+                    let response = this.paginator(this.state.pageWiseProducts,1,9)
+                    this.setPageDatas(response)
+                    // this.setState({
+                    //     page_active_link : 1
+                    // })
                     // console.log(this.state.products)
                 })
             })
@@ -705,7 +714,7 @@ class App extends Component {
 
         const { categories,add_product_category_error,add_product_title_error,
                 add_product_price_error,add_product_image_error,product_title,product_price,
-                product_category,product_top,closeModal,addTopProducts,
+                product_category,product_top,closeModal,addTopProducts,page_active_link,
                 pageNumber,pageWiseProducts,initialValue,midValue,finalValue,edit_product_category_error,
                 edit_product_title_error,edit_product_price_error,editableItem,edit_product_category,
                 edit_product_price,edit_product_title,edit_product_top,category_active_link } = this.state;
@@ -808,7 +817,7 @@ class App extends Component {
                                 <p className="m-0">Showing {pageWiseProducts.length !== 0 ?`1 - ${pageWiseProducts.length}` : '0'} of {pageWiseProducts.length} results</p>
 
                             <div className="dropdown sorting mx-4">
-                                <button className="btn btn-secondary dropdown-toggle shadow-sm" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button className="btn btn-secondary dropdown-toggle" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Sorting
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="sortingBtn">
@@ -851,7 +860,8 @@ class App extends Component {
                                     pageNumber.map((item,key) => {
                                         return(
                                             <>
-                                                <li className='page-num' id={key} data-page={item} onClick={this.pageNumbClick} >
+                                                <li className={`page-num ${(page_active_link === item) ? 'active' : ''}`} id={key} data-page={item} 
+                                                    onClick={this.pageNumbClick}>
                                                     {item}
                                                 </li> 
                                             </>  
@@ -1095,5 +1105,6 @@ class App extends Component {
         );
     }
 }
+
 
 export default App;

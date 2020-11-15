@@ -130,13 +130,8 @@ ul{
                 cursor: pointer;
             }
         }
-        >li.separator {
-            &:before {
-                content: '...';
-            }
-        }
         >li.active {
-            background-color: darkblue;
+            background-color: #a0a0a0;
             color: #fff;
         }
     }
