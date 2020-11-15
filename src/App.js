@@ -188,7 +188,7 @@ class App extends Component {
             midValue : '',
             filtered_by_price : [],
             editableItem : '',
-            category_active_link : ''
+            category_active_link : 0,
         }
     }
 
@@ -242,7 +242,7 @@ class App extends Component {
 
     //categorywise filter functionality
     categoryFilter(e,id){
-        console.log(e.target.dataset.key,id)
+        // console.log(e.target.dataset.key,id)
         e.preventDefault();
         let filterable_type = e.target.dataset.key
 
@@ -251,7 +251,7 @@ class App extends Component {
         this.setState({
             category_filter_products : this.state.products,
             sort_products : [],
-            category_active_link : id
+            category_active_link : parseInt(id)
         },() => {
             // console.log(this.state.category_filter_products)
             if(filterable_type !== 'all'){
@@ -527,7 +527,7 @@ class App extends Component {
         }
 
         this.setState({
-            pageWiseProducts : dummy_array
+            pageWiseProducts : dummy_array,
         })
     }
 
@@ -737,7 +737,7 @@ class App extends Component {
                                         categories.map((item,key) => {
                                             return(
                                                 <>
-                                                    <li id={key} data-key={item.id} onClick={(e) => this.categoryFilter(e,item.id)} className={category_active_link}>
+                                                    <li id={key} data-key={item.id} onClick={(e) => this.categoryFilter(e,key)} className={(category_active_link === key) ? 'active' : ''}>
                                                         <button type='button' className='btn text-left'>
                                                             {item.categoryTitle}
                                                         </button>
@@ -749,6 +749,7 @@ class App extends Component {
                                 </ul>
                             </div>
                         </div>
+                        <hr/>
                         <div className="my-4">
                             <p className="font-weight-bold">Filter by price</p>
                             <div data-role="rangeslider" className="rangeslider">
@@ -770,6 +771,7 @@ class App extends Component {
                             <p>Price : Rs {initialValue}.00 - Rs {finalValue}.00</p>
                             <button type='button' className='btn btn-secondary shadow-sm'  onClick={this.filterByPrice} >Filter</button>
                         </div>
+                        <hr/>
                         <div className=''>
                             <p className="font-weight-bold">Our best sellers</p>
 
@@ -849,7 +851,7 @@ class App extends Component {
                                     pageNumber.map((item,key) => {
                                         return(
                                             <>
-                                                <li className='page-num' id={key} data-page={item} onClick={this.pageNumbClick}>
+                                                <li className='page-num' id={key} data-page={item} onClick={this.pageNumbClick} >
                                                     {item}
                                                 </li> 
                                             </>  

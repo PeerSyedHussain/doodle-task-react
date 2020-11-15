@@ -45,6 +45,10 @@ ul li {
   outline: none !important;
   box-shadow: none !important;
 }
+.category-box ul li.active {
+  background-color: #ddd;
+  border-radius: 6px;
+}
 
 .sorting .dropdown-menu.show {
   left: -75px !important;

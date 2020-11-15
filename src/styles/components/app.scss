@@ -43,6 +43,10 @@ ul{
                     box-shadow: none !important;
                 }
             }
+            &.active{
+                background-color: #ddd;
+                border-radius: 6px;
+            }
         }
     }
 }
