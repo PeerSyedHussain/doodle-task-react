@@ -577,35 +577,72 @@ class App extends Component {
         e.preventDefault()
 
         console.log(item)
-        // $(item).click(function(e){
-        //     console.log(this)
-
-        //     let data_id = $(this).data('id'); 
-
-        //     e.preventDefault();
-
-        //     $('#editProduct').modal();
-
-        //     fetchValue($(this))
-
-        //     let element = $(this)
-        //     $('#editForm').submit(function(event){
-        //         event.preventDefault();
-
-        //         if(data_id == element.data('id')){
-        //             updateValue(element)
-        //         }
-        //     })
-        // })
-    }
-    editModal(e,id){
-        let item = id
 
         let edit_category = ''
         let edit_title = ''
         let edit_price = ''
         let edit_top_product = false
         let edit_img = ''
+
+        edit_category = this.state.edit_product_category
+        edit_title = this.state.edit_product_title
+        edit_price = this.state.edit_product_price
+        edit_top_product = this.state.edit_product_top
+        edit_img = this.state.edit_product_img
+
+        // let index = item - 1
+
+        // this.setState((prevState) => {
+        //     let products = Object.assign({},prevState.products[index])
+        //     // console.log(products)
+        //     products.dataCategory = edit_category
+        //     products.secChildChilFirData = edit_title
+        //     products.secChildChilSecData = parseInt(edit_price)
+        //     products.dataSort = parseInt(edit_price)
+        //     products.dataTopProduct = (edit_top_product === false ? 'off' : 'on')
+        //     products.img_url = edit_img
+        //     return { products }
+        // },()=>{
+        //     this.setState({
+        //         closeModal : true
+        //     })
+        //     console.log(this.state.products)
+        // })
+        // this.setState(prevState => {
+        //     let jasper = Object.assign({}, prevState.jasper);  // creating copy of state variable jasper
+        //     jasper.name = 'someothername';                     // update the name property, assign a new value                 
+        //     return { jasper };                                 // return new object jasper object
+        //   })
+
+        this.setState(prevState => ({
+
+            products: prevState.products.map(
+                el => el.id === item ? { 
+                    ...el,
+                    dataCategory : edit_category,
+                    secChildChilFirData : edit_title,
+                    secChildChilSecData : parseInt(edit_price),
+                    dataSort : parseInt(edit_price),
+                    dataTopProduct : (edit_top_product === false ? 'off' : 'on'),
+                    img_url : edit_img
+                }
+                : el
+            )
+        }),()=> {
+            this.setState({
+                closeModal : true
+            })
+            console.log(this.state.products)
+        })
+    }
+    editModal(e,id){
+        let item = id
+        let edit_category = ''
+        let edit_title = ''
+        let edit_price = ''
+        let edit_top_product = false
+        let edit_img = ''
+
         for(let i=0;i<this.state.products.length;i++){
             // console.log(this.state.products[i])
             if(item === this.state.products[i].id){
@@ -1118,7 +1155,7 @@ class App extends Component {
                                         </div>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <input type="submit" id='editProductSave' className="btn btn-primary" value="Save"/>
+                                    <input type="submit" id='editProductSave' className="btn btn-primary" data-dismiss={closeModal ? 'modal' : ''} value="Save"/>
                                 </form>
                             </div>
                         </div>
