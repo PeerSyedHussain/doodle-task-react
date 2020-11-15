@@ -187,7 +187,8 @@ class App extends Component {
             finalValue : '',
             midValue : '',
             filtered_by_price : [],
-            editableItem : ''
+            editableItem : '',
+            category_active_link : ''
         }
     }
 
@@ -240,8 +241,8 @@ class App extends Component {
     }
 
     //categorywise filter functionality
-    categoryFilter(e){
-        // console.log(e.target.dataset.key)
+    categoryFilter(e,id){
+        console.log(e.target.dataset.key,id)
         e.preventDefault();
         let filterable_type = e.target.dataset.key
 
@@ -249,7 +250,8 @@ class App extends Component {
 
         this.setState({
             category_filter_products : this.state.products,
-            sort_products : []
+            sort_products : [],
+            category_active_link : id
         },() => {
             // console.log(this.state.category_filter_products)
             if(filterable_type !== 'all'){
@@ -706,7 +708,7 @@ class App extends Component {
                 product_category,product_top,closeModal,addTopProducts,
                 pageNumber,pageWiseProducts,initialValue,midValue,finalValue,edit_product_category_error,
                 edit_product_title_error,edit_product_price_error,editableItem,edit_product_category,
-                edit_product_price,edit_product_title,edit_product_top } = this.state;
+                edit_product_price,edit_product_title,edit_product_top,category_active_link } = this.state;
         // console.log(categories,products)
 
         return (
@@ -719,7 +721,7 @@ class App extends Component {
                             </h2>
                         </div>
                         <div>
-                            <button type="button" className="btn btn-primary" onClick={this.handleModal} data-toggle="modal" data-target="#addProduct">
+                            <button type="button" className="btn btn-primary shadow-sm" onClick={this.handleModal} data-toggle="modal" data-target="#addProduct">
                                 Add Product
                             </button>
                         </div>
@@ -735,7 +737,7 @@ class App extends Component {
                                         categories.map((item,key) => {
                                             return(
                                                 <>
-                                                    <li id={key} data-key={item.id} onClick={(e) => this.categoryFilter(e)}>
+                                                    <li id={key} data-key={item.id} onClick={(e) => this.categoryFilter(e,item.id)} className={category_active_link}>
                                                         <button type='button' className='btn text-left'>
                                                             {item.categoryTitle}
                                                         </button>
@@ -766,7 +768,7 @@ class App extends Component {
                                     }} />
                             </div>
                             <p>Price : Rs {initialValue}.00 - Rs {finalValue}.00</p>
-                            <button type='button' className='btn btn-secondary' onClick={this.filterByPrice} >Filter</button>
+                            <button type='button' className='btn btn-secondary shadow-sm'  onClick={this.filterByPrice} >Filter</button>
                         </div>
                         <div className=''>
                             <p className="font-weight-bold">Our best sellers</p>
@@ -778,7 +780,7 @@ class App extends Component {
                                             return(
                                                 <>
                                                     <li id={key}>
-                                                        <div className="top-product-img">
+                                                        <div className="top-product-img shadow-sm">
                                                             <img src={item.img_url} alt="pic"/>
                                                         </div>
                                                         <div className="top-product-desc mx-3">
@@ -804,7 +806,7 @@ class App extends Component {
                                 <p className="m-0">Showing {pageWiseProducts.length !== 0 ?`1 - ${pageWiseProducts.length}` : '0'} of {pageWiseProducts.length} results</p>
 
                             <div className="dropdown sorting mx-4">
-                                <button className="btn btn-secondary dropdown-toggle" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button className="btn btn-secondary dropdown-toggle shadow-sm" type="button" id="sortingBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Sorting
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="sortingBtn">
@@ -827,7 +829,7 @@ class App extends Component {
                                                         className={item.className} onClick={(e) => this.editModal(e,item.id)} 
                                                         data-toggle='modal' data-target='#editProduct'>
                                                         <div className={item.firstChildClass}>
-                                                            <img src={item.img_url} alt="pic"/>
+                                                            <img src={item.img_url} alt="pic" className='shadow-sm'/>
                                                         </div>
                                                         <div className={item.secChildClass}>
                                                             <p className={item.secChildChilFirClass} data-title={item.secChildChilFirData}>{item.secChildChilFirData}</p>
@@ -975,7 +977,7 @@ class App extends Component {
                                             }
                                         </div>
                                     </div>
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" className="btn btn-secondary mr-3" data-dismiss="modal">Cancel</button>
                                     <input type="submit" id='addProductSave' data-dismiss={closeModal ? 'modal' : ''} className="btn btn-primary" value='Save'/>
                                 </form>
                             </div>
@@ -1080,7 +1082,7 @@ class App extends Component {
                                             />
                                         </div>
                                     </div>
-                                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" className="btn btn-secondary mr-3" data-dismiss="modal">Cancel</button>
                                     <input type="submit" id='editProductSave' className="btn btn-primary" data-dismiss={closeModal ? 'modal' : ''} value="Save"/>
                                 </form>
                             </div>
