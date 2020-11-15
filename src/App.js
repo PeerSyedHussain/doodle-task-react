@@ -198,6 +198,7 @@ class App extends Component {
         this.getFilterByPrice()
     }
 
+    //get min,max & mid price value function
     getFilterByPrice(){
         
         let final_array = []
@@ -219,7 +220,6 @@ class App extends Component {
         let finalValue = final_array[finalValueIndex].dataSort
         
         let midValue = finalValue / 2
-        console.log('cjec',initialValue,finalValue,midValue)
 
         this.setState({
             initialValue : initialValue,
@@ -228,6 +228,7 @@ class App extends Component {
         })
     }
 
+    //set page product data as per the response 
     setPageDatas(response){
         this.setState({
             paginationResponse : response
@@ -238,6 +239,7 @@ class App extends Component {
         })
     }
 
+    //categorywise filter functionality
     categoryFilter(e){
         // console.log(e.target.dataset.key)
         e.preventDefault();
@@ -277,6 +279,7 @@ class App extends Component {
         })
     }
 
+    //sort from low to high
     sortLowToHigh = (e) => {
         // console.log(e)
  
@@ -302,6 +305,7 @@ class App extends Component {
         })
     }
 
+    //sort from high to low
     sortHighToLow = (e) => {
         // console.log(e)
 
@@ -327,6 +331,7 @@ class App extends Component {
         })
     }
 
+    //default sorting
     sortDefault = (e) => {
         // console.log(e)
 
@@ -345,6 +350,7 @@ class App extends Component {
         })
     }
 
+    //this function return array of products or category products list
     sortDummyArray(dummy_array){
         if(this.state.category_filter_products.length === 0){
             return dummy_array = JSON.parse(JSON.stringify(this.state.products))
@@ -354,6 +360,7 @@ class App extends Component {
         }
     }
 
+    //add products functionality
     addProduct = (e) => {
         e.preventDefault()
         // console.log('addproduct',this.state.product_category,this.state.product_img,this.state.product_title,this.state.product_top,this.state.product_price)
@@ -430,7 +437,7 @@ class App extends Component {
                 add_product_image_error : false,
 
             },() => {
-                console.log(this.state.products)
+                // console.log(this.state.products)
                 this.addTopProducts()
                 let response = this.paginator(this.state.products,1,9)
                 this.setPageDatas(response)
@@ -439,6 +446,7 @@ class App extends Component {
         }
     }
 
+    //modal close function
     handleModal = (e) => {
         this.setState({
             closeModal : false
@@ -448,6 +456,7 @@ class App extends Component {
         })
     }
 
+    //adding/remove top products
     addTopProducts(){
 
         let dummy_array = []
@@ -464,6 +473,7 @@ class App extends Component {
         })
     }
 
+    //load page number as per the response
     loadPageNumber(response){
 
         let dummy_array = []
@@ -477,6 +487,8 @@ class App extends Component {
             // console.log('this.state.page',this.state.pageNumber)
         })
     }
+
+    //load products data as per the response
     onLoadProductData(response){
         let dummy_array = []
 
@@ -487,10 +499,11 @@ class App extends Component {
         this.setState({
             pageWiseProducts : dummy_array
         },()=>{
-            console.log('onload data',this.state.pageWiseProducts)
+            // console.log('onload data',this.state.pageWiseProducts)
         })
     }
 
+    //when user click the page numb 
     pageNumbClick = (e) => {
         e.preventDefault();
         // console.log(e.target.dataset.page)
@@ -536,6 +549,7 @@ class App extends Component {
         };
     }
 
+    //filter by price functionality
     filterByPrice = (e) => {
         let min = parseInt(this.state.initialValue)
         let max = parseInt(this.state.finalValue)
@@ -572,17 +586,18 @@ class App extends Component {
         })
     }
 
+    //after user click save btn in edit modal
     editProduct(e,item){
         e.preventDefault()
 
-        console.log(item)
+        // console.log(item)
 
         let edit_category = ''
         let edit_title = ''
         let edit_price = ''
         let edit_top_product = false
         let edit_img = ''
-
+        // console.log('hhh',this.state.edit_product_category,this.state.edit_product_price,this.state.edit_product_title)
         if(this.state.edit_product_category === '' || this.state.edit_product_price === '' || this.state.edit_product_title === ''){
             if(this.state.edit_product_category !== ''){
                 this.setState({
@@ -622,33 +637,6 @@ class App extends Component {
             edit_top_product = this.state.edit_product_top
             edit_img = this.state.edit_product_img
     
-            // let index = item - 1
-    
-            // let dummy_array = JSON.parse(JSON.stringify(this.state.products))
-    
-            // for(let i=0;i<dummy_array.length;i++){
-            //     if(item === dummy_array[i].id){
-            //         dummy_array[i].dataCategory = edit_category
-            //         dummy_array[i].secChildChilFirData = edit_title
-            //         dummy_array[i].secChildChilSecData = parseInt(edit_price)
-            //         dummy_array[i].dataSort = parseInt(edit_price)
-            //         dummy_array[i].dataTopProduct = (edit_top_product === false ? 'off' : 'on')
-            //         dummy_array[i].img_url = edit_img
-            //     }
-            // }
-    
-            // this.setState({
-            //     products : dummy_array,
-            //     // pageWiseProducts : dummy_array
-            // },()=> {
-            //     this.setState({
-            //         closeModal : true
-            //     },() => {
-            //         this.addTopProducts()
-            //         console.log(this.state.products)
-            //     })
-            // })
-    
             this.setState(prevState => ({
     
                 products: prevState.products.map(
@@ -666,14 +654,16 @@ class App extends Component {
             }),()=> {
                 this.setState({
                     closeModal : true,
-                    pageWiseProducts : this.state.products
+                    pageWiseProducts : this.state.products,
                 },() => {
                     this.addTopProducts()
-                    console.log(this.state.products)
+                    // console.log(this.state.products)
                 })
             })
         } 
     }
+
+    //when user click the products,fetching the previous state value to show in modal
     editModal(e,id){
         let item = id
         let edit_category = ''
@@ -685,7 +675,7 @@ class App extends Component {
         for(let i=0;i<this.state.products.length;i++){
             // console.log(this.state.products[i])
             if(item === this.state.products[i].id){
-                console.log(this.state.products[i])
+                // console.log(this.state.products[i])
                 edit_category = this.state.products[i].dataCategory
                 edit_title = this.state.products[i].secChildChilFirData
                 edit_price = this.state.products[i].secChildChilSecData
@@ -693,7 +683,7 @@ class App extends Component {
                 edit_img = this.state.products[i].img_url
             }
         }
-        console.log(edit_img,edit_category,edit_price,edit_title,edit_top_product)
+        // console.log(edit_img,edit_category,edit_price,edit_title,edit_top_product)
         this.setState({
             editableItem : item,
             edit_product_category : edit_category,
@@ -701,7 +691,10 @@ class App extends Component {
             edit_product_price : edit_price,
             edit_product_title : edit_title,
             edit_product_top : edit_top_product,
-            closeModal : false
+            closeModal : false,
+            edit_product_category_error : false,
+            edit_product_title_error : false,
+            edit_product_price_error : false,
         })
     }
 
@@ -759,14 +752,14 @@ class App extends Component {
                             <div data-role="rangeslider" className="rangeslider">
                                 <input type="range" name="range-1a" id="range-1a" min={initialValue} 
                                     max={midValue} value={initialValue} step="10" onChange={(e) => {
-                                        console.log(e.target.value)
+                                        // console.log(e.target.value)
                                         this.setState({
                                             initialValue : e.target.value
                                         })
                                     }} />
                                 <input type="range" name="range-1b" id="range-1b" min={midValue} 
                                     max={finalValue} value={finalValue} step="10" onChange={(e) => {
-                                        console.log(e.target.value)
+                                        // console.log(e.target.value)
                                         this.setState({
                                             finalValue : e.target.value
                                         })
@@ -1005,7 +998,7 @@ class App extends Component {
                                         <label htmlFor="category">Product Category</label>
                                         <select className="custom-select" id="editCategory"
                                             value={edit_product_category} onChange={(e) => {
-                                                console.log(e.target.value)   
+                                                // console.log(e.target.value)   
                                                 this.setState({
                                                     edit_product_category : e.target.value   
                                                 })
@@ -1028,7 +1021,7 @@ class App extends Component {
                                         <input type="text" className="form-control" id="editproductTitle" 
                                             placeholder="Enter Product Title" value={edit_product_title}
                                             onChange={(e)=>{
-                                                console.log(e.target.value)
+                                                // console.log(e.target.value)
                                                 this.setState({
                                                     edit_product_title : e.target.value
                                                 })
@@ -1048,7 +1041,7 @@ class App extends Component {
                                         <input type="number" className="form-control" id="editproductPrice" 
                                             placeholder="Enter Product Price" value={edit_product_price}
                                             onChange={(e)=>{
-                                                console.log(e.target.value)
+                                                // console.log(e.target.value)
                                                 this.setState({
                                                     edit_product_price : e.target.value
                                                 })
@@ -1065,7 +1058,7 @@ class App extends Component {
                                     }
                                     <div className="form-check my-3">
                                         <input className="form-check-input" type="checkbox" id="edittopProduct" onChange={(e) => {
-                                            console.log(e.target.checked)
+                                            // console.log(e.target.checked)
                                             this.setState({
                                                 edit_product_top : e.target.checked
                                             })
@@ -1079,7 +1072,7 @@ class App extends Component {
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" id="edituploadImage" 
                                                 onChange={(e) => {
-                                                    console.log(URL.createObjectURL(e.target.files[0]))
+                                                    // console.log(URL.createObjectURL(e.target.files[0]))
                                                     this.setState({
                                                         edit_product_img : URL.createObjectURL(e.target.files[0])
                                                     })
