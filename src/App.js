@@ -275,6 +275,9 @@ class App extends Component {
                 })     
             }
             else{
+                this.setState({
+                    page_active_link : 1
+                })
                 let response = this.paginator(this.state.category_filter_products,1,9)
                 this.setPageDatas(response)
                 // console.log('1',this.state.category_filter_products)
@@ -665,9 +668,9 @@ class App extends Component {
                     this.addTopProducts()
                     let response = this.paginator(this.state.pageWiseProducts,1,9)
                     this.setPageDatas(response)
-                    // this.setState({
-                    //     page_active_link : 1
-                    // })
+                    this.setState({
+                        page_active_link : 1
+                    })
                     // console.log(this.state.products)
                 })
             })
