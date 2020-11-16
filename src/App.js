@@ -235,7 +235,7 @@ class App extends Component {
         this.setState({
             paginationResponse : response
         },()=>{
-            // console.log('this.state.paginationResponse',this.state.paginationResponse)
+            console.log('this.state.paginationResponse',this.state.paginationResponse)
             this.loadPageNumber(this.state.paginationResponse)
             this.onLoadProductData(this.state.paginationResponse)
         })
@@ -444,6 +444,9 @@ class App extends Component {
 
             },() => {
                 // console.log(this.state.products)
+                this.setState({
+                    page_active_link : 1
+                })
                 this.addTopProducts()
                 let response = this.paginator(this.state.products,1,9)
                 this.setPageDatas(response)
@@ -497,7 +500,7 @@ class App extends Component {
     //load products data as per the response
     onLoadProductData(response){
         let dummy_array = []
-
+        // console.log(response)
         for(let i=0;i<response.data.length;i++){
             dummy_array.push(response.data[i])
         }
@@ -816,7 +819,7 @@ class App extends Component {
                         </div>
                     </div>
                     <div className='col-md-9'>
-                        <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center justify-content-between">
                                 <p className="m-0">Showing {pageWiseProducts.length !== 0 ?`1 - ${pageWiseProducts.length}` : '0'} of {pageWiseProducts.length} results</p>
 
                             <div className="dropdown sorting mx-4">
@@ -831,7 +834,7 @@ class App extends Component {
                             </div>
                         </div>
 
-                        <div className="products">
+                        <div className="products mt-5">
                             <ul>
                                 <>
                                     {

@@ -57,10 +57,9 @@ ul li {
 .products ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .products ul li {
-  margin: 10px auto;
+  margin: 10px 15px;
   transition: all 0.5s;
   border-radius: 10px;
   -webkit-border-radius: 10px;
