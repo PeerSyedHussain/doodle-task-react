@@ -59,6 +59,7 @@ ul li {
   flex-wrap: wrap;
 }
 .products ul li {
+  border: 1px solid #ecf2fb;
   margin: 10px 15px;
   transition: all 0.5s;
   border-radius: 10px;
@@ -70,6 +71,7 @@ ul li {
   -moz-transition: all 0.5s;
   -ms-transition: all 0.5s;
   -o-transition: all 0.5s;
+  box-shadow: #f9f9f9 0px 15px 15px 0px !important;
 }
 .products ul li.show {
   display: block;
@@ -99,8 +101,13 @@ ul li {
   margin: 0;
 }
 .products ul li:hover {
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 10px 32px rgba(0, 35, 75, 0.1) !important;
   cursor: pointer;
+  transform: translateY(-10px);
+  -webkit-transform: translateY(-10px);
+  -moz-transform: translateY(-10px);
+  -ms-transform: translateY(-10px);
+  -o-transform: translateY(-10px);
 }
 
 .custom-file-input {
